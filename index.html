@@ -70,21 +70,16 @@ sub, sup { font-size: 0.7em; line-height: 0; }
 }
 
 /* ---------- hero ---------- */
-.hero { padding: clamp(40px, 8vw, 88px) 0 clamp(28px, 4vw, 44px); }
-.hero .wrap { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 48px; align-items: end; }
+.hero { padding: clamp(32px, 6vw, 72px) 0 clamp(28px, 4vw, 48px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: start; }
+.hero-text { padding-top: 0.55em; }
 .hero h1 {
   font-weight: 400; font-size: clamp(48px, 8.4vw, 96px); line-height: 0.98;
   letter-spacing: -0.02em; margin: 0 0 28px;
 }
 .hero .lede { font-size: clamp(19px, 1.9vw, 22px); line-height: 1.55; max-width: 34em; margin: 0 0 18px; }
 .hero .pos { color: var(--ink-2); max-width: 38em; margin: 0; font-size: 17px; }
-.links { list-style: none; margin: 0; padding: 0; font-family: var(--sans); font-size: 15px; }
-.links li { border-top: 1px solid var(--rule); }
-.links li:last-child { border-bottom: 1px solid var(--rule); }
-.links a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 2px; color: var(--ink); text-decoration: none; }
-.links a span:last-child { color: var(--ink-3); }
-.links a:hover span:first-child { text-decoration: underline; text-underline-offset: 0.2em; }
-@media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 20px; } .hero-text { padding-top: 0; } }
 
 /* ---------- figure ---------- */
 .model { padding: 8px 0 clamp(56px, 8vw, 96px); }
@@ -107,7 +102,7 @@ h3 { font-weight: 500; font-size: 23px; line-height: 1.25; margin: 0 0 8px; lett
 .stage-bar .keys { display: flex; gap: 14px; flex-wrap: wrap; }
 .key { display: inline-flex; align-items: center; gap: 6px; }
 .key i { display: inline-block; width: 18px; height: 2px; border-radius: 2px; }
-.btns { display: flex; gap: 6px; }
+.btns { display: flex; gap: 6px; align-items: center; }
 .btn {
   font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink);
   background: var(--panel); border: 1px solid var(--rule); border-radius: 999px;
@@ -280,19 +275,11 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 
 <header class="hero" id="top">
   <div class="wrap">
-    <div>
-      <h1>Tuan Pham</h1>
+    <h1>Tuan Pham</h1>
+    <div class="hero-text">
       <p class="lede">I’m a statistical physicist. I work on large systems whose interactions are not fixed: couplings that fluctuate, adapt, or co-evolve with the states they connect. I ask what this does to order, robustness and irreversibility, in neural and gene-regulatory networks and in societies.</p>
       <p class="pos">Research fellow at the Dutch Institute for Emergent Phenomena, University of Amsterdam. Also affiliated with the Institute for Advanced Study, Amsterdam, and the Complexity Science Hub Vienna.</p>
     </div>
-    <ul class="links" aria-label="Elsewhere">
-      <li><a href="mailto:m.t.pham@uva.nl"><span>Email</span><span>m.t.pham@uva.nl</span></a></li>
-      <li><a href="https://scholar.google.com/citations?user=LKzkz-kAAAAJ&amp;hl=en"><span>Google Scholar</span><span>publications</span></a></li>
-      <li><a href="https://orcid.org/0000-0003-2869-0165"><span>ORCID</span><span>0000-0003-2869-0165</span></a></li>
-      <li><a href="https://arxiv.org/search/?searchtype=author&amp;query=Pham%2C+Tuan+Minh"><span>arXiv</span><span>preprints</span></a></li>
-      <li><a href="https://www.linkedin.com/in/tuan-pham-minh-39507122/"><span>LinkedIn</span><span>profile</span></a></li>
-      <li><a href="https://www.uva.nl/profiel/m.t.pham"><span>University of Amsterdam</span><span>profile</span></a></li>
-    </ul>
   </div>
 </header>
 
@@ -301,7 +288,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap">
     <div class="model-head">
       <h2 id="model-h">Explore the model</h2>
-      <p>The network from my 2026 preprint with Deepak Gupta, running live in your browser. Change how fast the couplings fluctuate and watch the entropy production rate respond.</p>
+      <p>The network from my 2026 preprint with Deepak Gupta, running live. Change how fast the couplings fluctuate and watch the entropy production respond.</p>
     </div>
 
     <figure class="figure" aria-labelledby="figcap">
@@ -314,6 +301,10 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
             <span class="key"><i style="background:var(--neg)"></i>negative coupling</span>
           </div>
           <div class="btns">
+            <div class="seg" role="group" aria-label="Simulation speed" title="Simulation speed" id="speed">
+              <button type="button" data-speed="1" aria-pressed="true">1×</button>
+              <button type="button" data-speed="4" aria-pressed="false">4×</button>
+            </div>
             <button class="btn" id="play" type="button" aria-pressed="false">Pause</button>
             <button class="btn" id="resample" type="button">New couplings</button>
           </div>
@@ -750,7 +741,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ================= publications data ================= */
-  const ME = ["Tuan Minh Pham", "Tuan Pham", "Tuan Pham Minh", "T. Fam", "Tuan M. Pham"];
+  const ME = ["Tuan Minh Pham", "Tuan Pham", "Tuan Pham Minh", "Tuan M. Pham"];
   const DIRS = { irr: "Irreversibility", adapt: "Adaptation", social: "Social dynamics", net: "Complex networks", early: "Early work" };
   const PUBS = [
     { key: "pham2026entropy", year: 2026, title: "Entropy production rate in stochastically time-evolving asymmetric networks",
@@ -810,15 +801,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     { key: "molinagarcia2016fractional", year: 2016, title: "Fractional kinetics emerging from ergodicity breaking in random media",
       authors: ["Daniel Molina-García", "Tuan Minh Pham", "Paolo Paradisi", "Carlo Manzo", "Gianni Pagnini"], venue: "Physical Review E", vol: "94", pages: "052147", doi: "10.1103/PhysRevE.94.052147", arxiv: "1508.01361", dir: "early",
       sum: "Diffusion in a medium with a random length scale reproduces the ergodicity breaking and aging seen in single-particle tracking in living cells, and shows fractional kinetics emerging from ergodicity breaking." },
-    { key: "pham2016phase", year: 2016, title: "Phase diagram analysis of noise-induced transition in an autocatalytic reaction",
-      authors: ["Tuan Minh Pham", "Yu. P. Virchenko"], venue: "Journal of Physics: Conference Series", vol: "769", pages: "012026", doi: "10.1088/1742-6596/769/1/012026", dir: "early",
-      sum: "The phase diagram of a noise-induced transition in a stochastic model of an autocatalytic reaction." },
     { key: "pham2016exhaustive", year: 2016, title: "Exhaustive study of the noise-induced phase transition in a stochastic model of self-catalyzed reactions",
       authors: ["Tuan Minh Pham", "Yu. P. Virchenko"], venue: "Theoretical and Mathematical Physics", vol: "188", issue: "2", pages: "1236–1252", doi: "10.1134/S0040577916080079", dir: "early",
       sum: "A complete analysis of the noise-induced phase transition in a stochastic model of self-catalysed reactions." },
-    { key: "irribarra2016enhancement", year: 2016, title: "Enhancement effects of transition and Vavilov–Cherenkov radiation mechanisms under grazing interaction of fast electrons with a thick substrate applied by thin layer",
-      authors: ["E. Irribarra", "A. S. Kubankin", "A. Sotnikov", "R. M. Nazhmudinov", "T. Fam", "A. P. Starovoytov"], venue: "IOP Conference Series: Materials Science and Engineering", vol: "142", pages: "012038", doi: "10.1088/1757-899X/142/1/012038", dir: "early",
-      sum: "Transition and Vavilov–Cherenkov radiation from fast electrons at grazing incidence on a thick substrate coated with a thin layer." },
   ];
 
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
@@ -930,7 +915,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   const sim = E.createSim({ N, dt: 0.01, seed: 20260329, params: { g: 0.8, tau0: 1, mu: 0, T: 0.5, F: "tanh" } });
   const P = sim.params;
   let running = !reduceMotion, visible = true;
-  let stepsPerFrame = 20;
+  const BASE_SPEED = 3; // simulated time units per second at 1×
+  let speedMul = 1, maxSteps = 40, stepAcc = 0, lastTs = 0;
 
   const net = $("#net"), trace = $("#trace");
   const nctx = net.getContext("2d"), tctx = trace.getContext("2d");
@@ -1004,8 +990,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     }
   }
 
-  // traces of three units over the last 30 time units
-  const TR_LEN = 1200, TR_UNITS = [3, 31, 58], TR_SPAN = 30;
+  // traces of three units over the last 40 time units
+  const TR_LEN = 1500, TR_UNITS = [3, 31, 58], TR_SPAN = 40;
   const tr = TR_UNITS.map(() => new Float32Array(TR_LEN));
   const trT = new Float64Array(TR_LEN);
   let trHead = 0, trCount = 0;
@@ -1020,7 +1006,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     const ctx = tctx; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, TW, TH);
     const top = 20, mid = top + (TH - top) / 2, half = (TH - top) / 2 - 2;
     ctx.fillStyle = C.ink3; ctx.font = `13px ${css.getPropertyValue("--sans")}`;
-    ctx.fillText("Activity of three units over the last 30 time units", 0, 13);
+    ctx.fillText("Activity of three units over the last 40 time units", 0, 13);
     ctx.strokeStyle = C.rule2; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(TW, mid); ctx.stroke();
     if (trCount < 2) return;
     const tNow = trT[(trHead - 1 + TR_LEN) % TR_LEN];
@@ -1051,7 +1037,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     $("#g-o").textContent = P.g.toFixed(2);
     $("#mu-o").textContent = P.mu.toFixed(2);
     $("#T-o").textContent = P.T.toFixed(2);
-    $$(".seg button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.F === P.F)));
+    $$("button[data-F]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.F === P.F)));
     const lin = P.F === "linear";
     $("#mu-ctl").classList.toggle("off", lin); muEl.disabled = lin;
   }
@@ -1085,7 +1071,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   gEl.addEventListener("input", () => apply({ g: +gEl.value }));
   muEl.addEventListener("input", () => apply({ mu: +muEl.value }));
   TEl.addEventListener("input", () => apply({ T: +TEl.value }));
-  $$(".seg button").forEach((b) => b.addEventListener("click", () => apply({ F: b.dataset.F })));
+  $$("button[data-F]").forEach((b) => b.addEventListener("click", () => apply({ F: b.dataset.F })));
   const PRESETS = {
     theory: { F: "linear", tau0: 1, g: 0.8, mu: 0, T: 0.5 },
     fast: { F: "tanh", tau0: 0.1, g: 1, mu: 0, T: 0.5 },
@@ -1126,7 +1112,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     if (P.F === "linear" && !(th && th.stable)) {
       st.textContent = `Beyond the stability line: at τ0 = ${fmtTau(P.tau0)} a linear network diverges for g > ${gc.toFixed(2)}. Lower g or switch to tanh.`;
     } else if (P.F === "linear") {
-      st.textContent = "Drag g and wait for the estimate to settle; each measurement is added to the plot.";
+      st.textContent = "Drag g and wait for the estimate to settle; each measurement is added to the plot. Switch to 4× for quicker estimates.";
     } else if (P.tau0 >= 50) {
       st.textContent = "Couplings are effectively frozen: the arcs barely change, but the units keep moving.";
     } else if (P.tau0 <= 0.2) {
@@ -1254,12 +1240,21 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   /* ---------- loop ---------- */
   new ResizeObserver(sizePlot).observe(wrapEl);
   new IntersectionObserver((ents) => { visible = ents[0].isIntersecting; }, { rootMargin: "100px" }).observe($(".figure"));
-  function frame() {
+  $$("#speed button").forEach((b) => b.addEventListener("click", () => {
+    speedMul = +b.dataset.speed;
+    $$("#speed button").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  }));
+  function frame(ts) {
+    const dtw = lastTs ? Math.min(0.1, (ts - lastTs) / 1000) : 1 / 60;
+    lastTs = ts;
     if (running && visible) {
+      stepAcc += (BASE_SPEED * speedMul * dtw) / sim.dt;
+      let n = Math.floor(stepAcc);
+      if (n > maxSteps) { n = maxSteps; stepAcc = 0; } else stepAcc -= n;
       const t0 = performance.now();
-      sim.step(stepsPerFrame);
+      if (n > 0) sim.step(n);
       const dtms = performance.now() - t0;
-      if (dtms > 10 && stepsPerFrame > 4) stepsPerFrame -= 2; else if (dtms < 6 && stepsPerFrame < 30) stepsPerFrame += 1;
+      if (dtms > 12 && maxSteps > 6) maxSteps -= 2; else if (dtms < 6 && maxSteps < 80) maxSteps += 1;
       pushTrace();
       drawNet(); drawTrace();
       updateReadout(false);
