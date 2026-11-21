@@ -1,9 +1,1276 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tuan Pham, statistical physicist</title>
+<meta name="description" content="Tuan Minh Pham, statistical physicist at the Dutch Institute for Emergent Phenomena, University of Amsterdam. Research on irreversibility in non-reciprocal networks, adaptation across timescales, and collective social dynamics.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&family=STIX+Two+Text:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #F3F5F8;
+  --panel: #FFFFFF;
+  --ink: #172033;
+  --ink-2: #4A556C;
+  --ink-3: #667085;
+  --rule: #D8DEE7;
+  --rule-2: #E8ECF2;
+  --pos: #C8274F;
+  --neg: #2250C8;
+  --mid: #B9BFCA;
+  --serif: "STIX Two Text", "STIX Two", "Times New Roman", Times, serif;
+  --sans: "Hanken Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --wrap: 1180px;
+  --gutter: clamp(20px, 4vw, 40px);
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: 18px;
+  line-height: 1.6;
+  font-kerning: normal;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--neg); text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--neg); outline-offset: 2px; border-radius: 2px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+i.v { font-style: italic; }
+sub, sup { font-size: 0.7em; line-height: 0; }
+
+/* ---------- nav ---------- */
+.nav {
+  position: sticky; top: 0; z-index: 10;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s;
+}
+.nav.scrolled { border-bottom-color: var(--rule); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 24px; }
+.nav .home { font-family: var(--serif); font-size: 21px; color: var(--ink); text-decoration: none; letter-spacing: -0.005em; }
+.nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.nav ul a {
+  font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--ink-2);
+  text-decoration: none; padding: 6px 10px; border-radius: 999px;
+}
+.nav ul a:hover { color: var(--ink); background: var(--rule-2); }
+.nav ul a[aria-current="true"] { color: var(--ink); background: var(--panel); box-shadow: inset 0 0 0 1px var(--rule); }
+@media (max-width: 720px) {
+  .nav ul { display: none; }
+}
+
+/* ---------- hero ---------- */
+.hero { padding: clamp(40px, 8vw, 88px) 0 clamp(28px, 4vw, 44px); }
+.hero .wrap { display: grid; grid-template-columns: minmax(0, 8fr) minmax(0, 4fr); gap: 48px; align-items: end; }
+.hero h1 {
+  font-weight: 400; font-size: clamp(48px, 8.4vw, 96px); line-height: 0.98;
+  letter-spacing: -0.02em; margin: 0 0 28px;
+}
+.hero .lede { font-size: clamp(19px, 1.9vw, 22px); line-height: 1.55; max-width: 34em; margin: 0 0 18px; }
+.hero .pos { color: var(--ink-2); max-width: 38em; margin: 0; font-size: 17px; }
+.links { list-style: none; margin: 0; padding: 0; font-family: var(--sans); font-size: 15px; }
+.links li { border-top: 1px solid var(--rule); }
+.links li:last-child { border-bottom: 1px solid var(--rule); }
+.links a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 2px; color: var(--ink); text-decoration: none; }
+.links a span:last-child { color: var(--ink-3); }
+.links a:hover span:first-child { text-decoration: underline; text-underline-offset: 0.2em; }
+@media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 32px; } }
+
+/* ---------- figure ---------- */
+.model { padding: 8px 0 clamp(56px, 8vw, 96px); }
+.model-head { display: flex; justify-content: space-between; align-items: baseline; gap: 24px; flex-wrap: wrap; margin-bottom: 18px; }
+.model-head h2 { margin: 0; }
+.model-head p { margin: 0; color: var(--ink-2); max-width: 46em; font-size: 17px; }
+h2 { font-weight: 400; font-size: clamp(30px, 3.4vw, 40px); line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 12px; }
+h3 { font-weight: 500; font-size: 23px; line-height: 1.25; margin: 0 0 8px; letter-spacing: -0.005em; }
+
+.figure {
+  margin: 0;
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 6px;
+  display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+}
+.stage { padding: 20px; border-right: 1px solid var(--rule-2); display: flex; flex-direction: column; gap: 10px; }
+.stage canvas { display: block; width: 100%; }
+#net { aspect-ratio: 1 / 1; max-width: 560px; margin: 0 auto; touch-action: manipulation; }
+#trace { height: 76px; }
+.stage-bar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px 16px; font-family: var(--sans); font-size: 14px; color: var(--ink-2); }
+.stage-bar .keys { display: flex; gap: 14px; flex-wrap: wrap; }
+.key { display: inline-flex; align-items: center; gap: 6px; }
+.key i { display: inline-block; width: 18px; height: 2px; border-radius: 2px; }
+.btns { display: flex; gap: 6px; }
+.btn {
+  font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--rule); border-radius: 999px;
+  padding: 6px 12px; cursor: pointer; line-height: 1.2; white-space: nowrap;
+}
+.btn:hover { border-color: var(--ink-3); }
+.btn[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+
+.controls { padding: 20px 22px 22px; display: flex; flex-direction: column; gap: 16px; font-family: var(--sans); }
+.ctl label, .ctl .lab { display: flex; justify-content: space-between; align-items: baseline; font-size: 15px; font-weight: 500; }
+.ctl output { font-variant-numeric: tabular-nums lining-nums; color: var(--ink); font-weight: 600; }
+.ctl .ends { display: flex; justify-content: space-between; font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.ctl .var { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: 17px; }
+.ctl.off { opacity: 0.45; }
+.ctl-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px 22px; }
+input[type="range"] { width: 100%; margin: 8px 0 0; accent-color: var(--ink); height: 22px; cursor: pointer; }
+.seg { display: inline-flex; border: 1px solid var(--rule); border-radius: 999px; padding: 2px; gap: 2px; }
+.seg button { font: inherit; font-size: 14px; border: 0; background: transparent; color: var(--ink-2); padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--panel); }
+.seg .var { font-size: 16px; }
+.row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.presets { display: flex; gap: 6px; flex-wrap: wrap; }
+.presets .btn { font-size: 13px; padding: 5px 10px; }
+
+.readout { border-top: 1px solid var(--rule-2); padding-top: 14px; }
+.readout h3 { font-family: var(--sans); font-size: 15px; font-weight: 600; margin: 0 0 6px; letter-spacing: 0; }
+.vals { display: grid; grid-template-columns: auto 1fr; gap: 2px 16px; font-size: 15px; align-items: baseline; }
+.vals dt { color: var(--ink-2); }
+.vals dd { margin: 0; font-variant-numeric: tabular-nums lining-nums; font-weight: 600; font-size: 17px; }
+.vals dd small { font-weight: 400; color: var(--ink-3); font-size: 14px; }
+.status { font-size: 14px; color: var(--ink-2); min-height: 1.5em; margin: 6px 0 0; }
+.status.warn { color: var(--pos); }
+
+.plot-wrap { position: relative; }
+.plot-wrap svg { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); }
+.plot-wrap .tip {
+  position: absolute; pointer-events: none; background: var(--ink); color: #fff; font-size: 13px;
+  padding: 6px 8px; border-radius: 4px; white-space: nowrap; transform: translate(-50%, -100%); opacity: 0;
+  font-variant-numeric: tabular-nums lining-nums; line-height: 1.35;
+}
+.plot-legend { display: flex; gap: 16px; font-size: 13px; color: var(--ink-2); margin: 2px 0 0; flex-wrap: wrap; }
+.plot-legend .key i { height: 2px; background: var(--ink); }
+.plot-legend .dot { width: 8px !important; height: 8px !important; border-radius: 50%; background: var(--ink-3) !important; }
+details.tbl { font-size: 14px; color: var(--ink-2); }
+details.tbl summary { cursor: pointer; }
+details.tbl table { border-collapse: collapse; margin-top: 6px; font-variant-numeric: tabular-nums lining-nums; }
+details.tbl td, details.tbl th { padding: 2px 12px 2px 0; text-align: left; font-weight: 400; }
+details.tbl th { color: var(--ink-3); }
+
+figcaption {
+  grid-column: 1 / -1; border-top: 1px solid var(--rule-2); padding: 18px 22px 20px;
+  font-size: 16px; line-height: 1.55; color: var(--ink-2);
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px 36px;
+}
+figcaption b { color: var(--ink); font-weight: 600; }
+.eq { font-size: 18px; color: var(--ink); line-height: 2; }
+.eq .ln { display: block; white-space: nowrap; overflow-x: auto; }
+@media (max-width: 960px) {
+  .figure { grid-template-columns: minmax(0, 1fr); }
+  .stage { border-right: 0; border-bottom: 1px solid var(--rule-2); }
+  figcaption { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .ctl-grid { grid-template-columns: minmax(0, 1fr); }
+  .stage, .controls { padding-left: 14px; padding-right: 14px; }
+}
+
+/* ---------- research ---------- */
+section.block { padding: clamp(56px, 8vw, 96px) 0; border-top: 1px solid var(--rule); }
+.intro { max-width: 40em; font-size: 20px; margin: 0 0 36px; }
+.dir { display: grid; grid-template-columns: 72px minmax(0, 6fr) minmax(0, 4fr); gap: 28px; padding: 30px 0; border-top: 1px solid var(--rule); }
+.dir:last-of-type { border-bottom: 1px solid var(--rule); }
+.dir svg { width: 64px; height: 64px; }
+.dir p { margin: 0; max-width: 36em; }
+.dir .papers { font-family: var(--sans); font-size: 15px; }
+.dir .papers ul { list-style: none; padding: 0; margin: 0 0 12px; }
+.dir .papers li { padding: 5px 0; border-bottom: 1px solid var(--rule-2); line-height: 1.4; }
+.dir .papers li span { color: var(--ink-3); }
+.dir .papers a { color: var(--ink); text-decoration: none; }
+.dir .papers a:hover { text-decoration: underline; }
+.toolbox { margin: 28px 0 0; max-width: 46em; color: var(--ink-2); }
+@media (max-width: 860px) {
+  .dir { grid-template-columns: 56px minmax(0, 1fr); }
+  .dir svg { width: 48px; height: 48px; }
+  .dir .papers { grid-column: 2; }
+}
+
+/* ---------- publications ---------- */
+.pub-tools { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; margin: 20px 0 8px; font-family: var(--sans); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip {
+  font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--ink-2);
+  border: 1px solid var(--rule); background: var(--panel); border-radius: 999px; padding: 6px 12px; cursor: pointer;
+  display: inline-flex; gap: 6px; align-items: center;
+}
+.chip span { color: var(--ink-3); font-variant-numeric: tabular-nums lining-nums; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--panel); border-color: var(--ink); }
+.chip[aria-pressed="true"] span { color: #C9D0DC; }
+.search { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+.search input[type="search"] {
+  font: inherit; font-size: 15px; padding: 8px 12px; border: 1px solid var(--rule); border-radius: 4px;
+  background: var(--panel); color: var(--ink); width: 260px; max-width: 100%;
+}
+.switch { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; color: var(--ink-2); cursor: pointer; }
+.switch input { accent-color: var(--ink); width: 16px; height: 16px; }
+.count { font-family: var(--sans); font-size: 14px; color: var(--ink-3); margin: 0 0 8px; }
+.pubs { list-style: none; margin: 0; padding: 0; }
+.pub { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 24px; padding: 18px 0; border-top: 1px solid var(--rule-2); }
+.pub .yr { font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--ink-3); font-variant-numeric: lining-nums; padding-top: 3px; }
+.pub .ttl { font-size: 20px; line-height: 1.35; margin: 0 0 4px; font-weight: 500; }
+.pub .ttl a { color: var(--ink); text-decoration: none; }
+.pub .ttl a:hover { text-decoration: underline; }
+.pub .au { margin: 0; font-size: 16px; color: var(--ink-2); line-height: 1.5; }
+.pub .au b { color: var(--ink); font-weight: 600; }
+.pub .ven { margin: 0; font-size: 16px; color: var(--ink-2); }
+.pub .ven em { color: var(--ink); }
+.pub .sum { margin: 8px 0 0; max-width: 44em; font-size: 17px; }
+.pub .acts { display: flex; gap: 16px; margin-top: 8px; font-family: var(--sans); font-size: 14px; flex-wrap: wrap; align-items: center; }
+.pub .acts a, .pub .acts button { color: var(--neg); font: inherit; font-weight: 500; background: none; border: 0; padding: 0; cursor: pointer; text-decoration: none; }
+.pub .acts a:hover, .pub .acts button:hover { text-decoration: underline; }
+.pub .tags { color: var(--ink-3); }
+.pubs.nosum .sum { display: none; }
+.empty { padding: 28px 0; border-top: 1px solid var(--rule-2); font-family: var(--sans); color: var(--ink-2); }
+.empty .btn { margin-left: 8px; }
+.more { font-family: var(--sans); font-size: 15px; margin-top: 18px; color: var(--ink-2); }
+@media (max-width: 600px) { .pub { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+/* ---------- notes ---------- */
+.note { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); max-width: 52em; }
+.note summary { cursor: pointer; padding: 18px 0; list-style: none; display: grid; grid-template-columns: 24px 1fr; gap: 8px; }
+.note summary::-webkit-details-marker { display: none; }
+.note summary .tw { font-family: var(--sans); color: var(--ink-3); transition: transform .2s; display: inline-block; }
+.note[open] summary .tw { transform: rotate(90deg); }
+.note .t { font-size: 20px; font-weight: 500; line-height: 1.35; display: block; }
+.note .m { font-size: 16px; color: var(--ink-2); display: block; }
+.note .b { padding: 0 0 20px 32px; }
+.note .b p { margin: 0 0 10px; max-width: 40em; }
+
+/* ---------- about ---------- */
+.about-grid { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; }
+.tl { list-style: none; margin: 0; padding: 0; }
+.tl li { display: grid; grid-template-columns: 112px 1fr; gap: 20px; padding: 12px 0; border-top: 1px solid var(--rule-2); }
+.tl .when { font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--ink-3); font-variant-numeric: lining-nums tabular-nums; padding-top: 2px; }
+.tl .what { font-size: 17px; line-height: 1.5; }
+.tl .what span { color: var(--ink-2); }
+.contact p { margin: 0 0 14px; }
+.contact .mail { font-size: 24px; }
+.contact .profiles { display: flex; flex-wrap: wrap; gap: 6px 20px; font-family: var(--sans); font-size: 15px; }
+@media (max-width: 860px) { .about-grid { grid-template-columns: minmax(0, 1fr); gap: 40px; } }
+@media (max-width: 480px) { .tl li { grid-template-columns: 1fr; gap: 0; } }
+
+footer { border-top: 1px solid var(--rule); padding: 28px 0 40px; font-family: var(--sans); font-size: 14px; color: var(--ink-3); }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+</style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
-<p>Here is the list of interesting papers:</p>
-<p>RNNS INCREMENTALLY EVOLVING ON AN EQUILIBRIUM MANIFOLD: A PANACEA FOR VANISHING AND EXPLODING GRADIENTS?, Anil Kag, Ziming Zhang, Venkatesh Saligrama, ICLR 2020. This paper's key insight is how to exploit effective equilibrium dynamics of the state vector as well as the discrete samples by virtue of the combination of "inherent" low pass filtering, as encoded by the decay term,  and slowly time varying input. The implementation is done by including hidden variable whose dynamics are identical to that of visible ones but crucially happen on different timescale. This idea is tightly related to cell differentiation under epigenetic modification. The latter is modeled by epigenetic parameters that do not necessarily obey the same dynamics as that of genes.</p>
+
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <a class="home" href="#top">Tuan Pham</a>
+    <ul>
+      <li><a href="#model">Model</a></li>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#notes">Notes</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <h1>Tuan Pham</h1>
+      <p class="lede">I’m a statistical physicist. I work on large systems whose interactions are not fixed: couplings that fluctuate, adapt, or co-evolve with the states they connect. I ask what this does to order, robustness and irreversibility, in neural and gene-regulatory networks and in societies.</p>
+      <p class="pos">Research fellow at the Dutch Institute for Emergent Phenomena, University of Amsterdam. Also affiliated with the Institute for Advanced Study, Amsterdam, and the Complexity Science Hub Vienna.</p>
+    </div>
+    <ul class="links" aria-label="Elsewhere">
+      <li><a href="mailto:m.t.pham@uva.nl"><span>Email</span><span>m.t.pham@uva.nl</span></a></li>
+      <li><a href="https://scholar.google.com/citations?user=LKzkz-kAAAAJ&amp;hl=en"><span>Google Scholar</span><span>publications</span></a></li>
+      <li><a href="https://orcid.org/0000-0003-2869-0165"><span>ORCID</span><span>0000-0003-2869-0165</span></a></li>
+      <li><a href="https://arxiv.org/search/?searchtype=author&amp;query=Pham%2C+Tuan+Minh"><span>arXiv</span><span>preprints</span></a></li>
+      <li><a href="https://www.linkedin.com/in/tuan-pham-minh-39507122/"><span>LinkedIn</span><span>profile</span></a></li>
+      <li><a href="https://www.uva.nl/profiel/m.t.pham"><span>University of Amsterdam</span><span>profile</span></a></li>
+    </ul>
+  </div>
+</header>
+
+<main>
+<section class="model" id="model" aria-labelledby="model-h">
+  <div class="wrap">
+    <div class="model-head">
+      <h2 id="model-h">Explore the model</h2>
+      <p>The network from my 2026 preprint with Deepak Gupta, running live in your browser. Change how fast the couplings fluctuate and watch the entropy production rate respond.</p>
+    </div>
+
+    <figure class="figure" aria-labelledby="figcap">
+      <div class="stage">
+        <canvas id="net" role="img" aria-label="Animated ring of 80 units. Colored arcs are the strongest couplings, red positive and blue negative; unit colors show their activity."></canvas>
+        <canvas id="trace" aria-hidden="true"></canvas>
+        <div class="stage-bar">
+          <div class="keys">
+            <span class="key"><i style="background:var(--pos)"></i>positive coupling</span>
+            <span class="key"><i style="background:var(--neg)"></i>negative coupling</span>
+          </div>
+          <div class="btns">
+            <button class="btn" id="play" type="button" aria-pressed="false">Pause</button>
+            <button class="btn" id="resample" type="button">New couplings</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="ctl">
+          <label for="tau">Coupling correlation time <span><span class="var">τ</span><sub>0</sub> = <output id="tau-o" for="tau">1.0</output></span></label>
+          <input type="range" id="tau" min="-1" max="2" step="0.01" value="0">
+          <div class="ends"><span>annealed: couplings flicker</span><span>quenched: couplings frozen</span></div>
+        </div>
+        <div class="ctl-grid">
+          <div class="ctl">
+            <label for="g">Disorder strength <span><span class="var">g</span> = <output id="g-o" for="g">0.80</output></span></label>
+            <input type="range" id="g" min="0" max="2" step="0.01" value="0.8">
+          </div>
+          <div class="ctl" id="mu-ctl">
+            <label for="mu">Mean coupling <span><span class="var">μ</span> = <output id="mu-o" for="mu">0.00</output></span></label>
+            <input type="range" id="mu" min="-1" max="2.5" step="0.05" value="0">
+          </div>
+          <div class="ctl">
+            <label for="T">Noise temperature <span><span class="var">T</span> = <output id="T-o" for="T">0.50</output></span></label>
+            <input type="range" id="T" min="0.05" max="1.5" step="0.05" value="0.5">
+          </div>
+          <div class="ctl">
+            <span class="lab" id="F-lab">Transfer function</span>
+            <div class="seg" role="group" aria-labelledby="F-lab" style="margin-top:6px">
+              <button type="button" data-F="tanh" aria-pressed="true"><span class="var">F</span> = tanh</button>
+              <button type="button" data-F="linear" aria-pressed="false"><span class="var">F</span> linear</button>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="presets" role="group" aria-label="Presets">
+            <button class="btn" type="button" data-preset="theory">Compare with theory</button>
+            <button class="btn" type="button" data-preset="fast">Fast couplings</button>
+            <button class="btn" type="button" data-preset="frozen">Frozen, strong disorder</button>
+            <button class="btn" type="button" data-preset="ordered">Ordered (<span class="var" style="font-family:var(--serif);font-style:italic">μ</span> &gt; 1)</button>
+          </div>
+        </div>
+
+        <div class="readout">
+          <h3>Entropy production rate per unit, <span style="font-family:var(--serif);font-style:italic;font-weight:400">ṡ</span></h3>
+          <dl class="vals">
+            <dt>Simulation</dt><dd id="r-sim">–</dd>
+            <dt>Exact theory</dt><dd id="r-th">–</dd>
+          </dl>
+          <p class="status" id="status" role="status"></p>
+          <div class="plot-wrap" id="plot-wrap">
+            <svg id="plot" viewBox="0 0 400 210" role="img" aria-labelledby="plot-t plot-d">
+              <title id="plot-t">Entropy production rate versus disorder strength g</title>
+              <desc id="plot-d">Line: exact dynamical mean-field result for a linear network at the current correlation time. Dots: values measured in the simulation. Click the plot to set g.</desc>
+            </svg>
+            <div class="tip" id="tip"></div>
+          </div>
+          <div class="plot-legend">
+            <span class="key"><i></i>exact result, linear <span style="font-family:var(--serif);font-style:italic">F</span></span>
+            <span class="key"><i class="dot"></i>measured in simulation</span>
+            <span>Click the plot to set <span style="font-family:var(--serif);font-style:italic">g</span></span>
+          </div>
+          <details class="tbl" style="margin-top:8px">
+            <summary>Measured values as a table</summary>
+            <table><thead><tr><th><i>g</i></th><th>simulation</th><th>theory</th></tr></thead><tbody id="tbl"></tbody></table>
+          </details>
+        </div>
+      </div>
+
+      <figcaption id="figcap">
+        <div>
+          <b>Fig. 1.</b> Eighty units, each driven by every other through couplings <i>J</i><sub><i>ij</i></sub>(<i>t</i>) that are themselves random processes. When the correlation time <i>τ</i><sub>0</sub> is short the couplings flicker (annealed disorder); when it is long they freeze (quenched disorder). Because <i>J</i><sub><i>ij</i></sub> and <i>J</i><sub><i>ji</i></sub> evolve independently, the dynamics break detailed balance. The readout measures the resulting entropy production directly from the trajectory. For linear <i>F</i> it can be compared with the exact dynamical mean-field result of <a href="https://arxiv.org/abs/2603.27658">Pham &amp; Gupta (2026)</a>; agreement is within finite-size error.
+        </div>
+        <div class="eq" aria-label="Model equations">
+          <span class="ln"><i>ẋ</i><sub><i>i</i></sub> = −<i>x</i><sub><i>i</i></sub> + <i>F</i>(∑<sub><i>j</i>≠<i>i</i></sub> <i>J</i><sub><i>ij</i></sub>(<i>t</i>) <i>x</i><sub><i>j</i></sub>) + <i>ζ</i><sub><i>i</i></sub>(<i>t</i>), &nbsp;⟨<i>ζ</i><sub><i>i</i></sub><i>ζ</i><sub><i>j</i></sub>⟩ = 2<i>T</i> <i>δ</i><sub><i>ij</i></sub> <i>δ</i>(<i>t</i>−<i>t</i>′)</span>
+          <span class="ln"><i>J</i><sub><i>ij</i></sub>(<i>t</i>) = <i>μ</i>/<i>N</i> + <i>g</i> <i>Z</i><sub><i>ij</i></sub>(<i>t</i>)/√<i>N</i>, &nbsp;<i>Ż</i><sub><i>ij</i></sub> = −<i>Z</i><sub><i>ij</i></sub>/<i>τ</i><sub>0</sub> + (√(1+2<i>τ</i><sub>0</sub>)/<i>τ</i><sub>0</sub>) <i>ξ</i><sub><i>ij</i></sub>(<i>t</i>)</span>
+          <span class="ln"><i>ṡ</i> = (<i>NT</i>)<sup>−1</sup> ∑<sub><i>i</i></sub> [<i>F</i>(<i>h</i><sub><i>i</i></sub>) − <i>x</i><sub><i>i</i></sub>] ∘ <i>ẋ</i><sub><i>i</i></sub></span>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="block" id="research" aria-labelledby="research-h">
+  <div class="wrap">
+    <h2 id="research-h">Research</h2>
+    <p class="intro">A thread runs through most of my work: fast degrees of freedom coupled through interactions that change on their own, slower or faster, timescale. Neural activity and synapses, phenotypes and genotypes, opinions and social ties. Three directions grow out of it.</p>
+
+    <article class="dir">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="12" cy="32" r="6" fill="#fff" stroke="#172033" stroke-width="2"/>
+        <circle cx="52" cy="32" r="6" fill="#fff" stroke="#172033" stroke-width="2"/>
+        <path d="M17 27 Q32 10 47 27" fill="none" stroke="#C8274F" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M43 26 l4.5 1.5 l-1 -4.6" fill="none" stroke="#C8274F" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M47 37 Q32 50 17 37" fill="none" stroke="#2250C8" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M21 38.5 l-4.2 -1.6 l0.8 4.4" fill="none" stroke="#2250C8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h3>Irreversibility in non-reciprocal networks</h3>
+        <p>When unit <i>i</i> acts on <i>j</i> differently than <i>j</i> acts on <i>i</i>, a network cannot relax to equilibrium. I use dynamical mean-field theory to derive exact entropy production rates for such networks: how irreversibility marks the onset of chaos, and how it depends on the timescale on which the couplings themselves fluctuate.</p>
+      </div>
+      <div class="papers">
+        <ul data-dir="irr"></ul>
+        <button class="btn" type="button" data-show="irr">Show these papers</button>
+      </div>
+    </article>
+
+    <article class="dir">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M4 40 C14 40 16 22 32 22 S50 40 60 40" fill="none" stroke="#172033" stroke-width="3" stroke-linecap="round"/>
+        <polyline points="4,30 7,25 10,33 13,27 16,20 19,26 22,15 25,21 28,13 31,18 34,12 37,19 40,15 43,24 46,20 49,30 52,26 55,32 58,29 60,31" fill="none" stroke="#667085" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <h3>Adaptation across timescales</h3>
+        <p>Fast variables such as gene expression or signal responses, coupled to parameters that adapt slowly, like the gene-regulatory network itself. I extend path-integral (MSRDJ) and replica methods to these two-timescale problems, and use them to explain when robust phenotypes emerge in evolution, and how cells adapt to fluctuating signals in a way that resembles learning.</p>
+      </div>
+      <div class="papers">
+        <ul data-dir="adapt"></ul>
+        <button class="btn" type="button" data-show="adapt">Show these papers</button>
+      </div>
+    </article>
+
+    <article class="dir">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <line x1="32" y1="10" x2="10" y2="52" stroke="#2250C8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="32" y1="10" x2="54" y2="52" stroke="#2250C8" stroke-width="3" stroke-linecap="round"/>
+        <line x1="10" y1="52" x2="54" y2="52" stroke="#C8274F" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="10" r="5.5" fill="#fff" stroke="#172033" stroke-width="2"/>
+        <circle cx="10" cy="52" r="5.5" fill="#fff" stroke="#172033" stroke-width="2"/>
+        <circle cx="54" cy="52" r="5.5" fill="#fff" stroke="#172033" stroke-width="2"/>
+      </svg>
+      <div>
+        <h3>Collective social dynamics</h3>
+        <p>Opinions and relationships co-evolve. With spin-glass and voter-type models I study why societies fragment into cohesive, mutually hostile groups, why polarization can grow as societies become more connected, what sets the size of social groups, and how symmetric preferences can still tip a city into segregation, and I test these ideas against data and experiments. This is the focus of my fellowship on polarisation, segregation and inequality.</p>
+      </div>
+      <div class="papers">
+        <ul data-dir="social"></ul>
+        <button class="btn" type="button" data-show="social">Show these papers</button>
+      </div>
+    </article>
+
+    <p class="toolbox">Methods I use and develop: dynamical mean-field theory with MSRDJ path integrals, replica theory, the cavity method and belief propagation, and the spectral theory of sparse random graphs (<a href="https://doi.org/10.1103/PhysRevE.110.054307">Phys. Rev. E 2024</a>). Earlier work covers stochastic processes, from noise-induced transitions to fractional kinetics.</p>
+  </div>
+</section>
+
+<section class="block" id="publications" aria-labelledby="pubs-h">
+  <div class="wrap">
+    <h2 id="pubs-h">Publications</h2>
+    <div class="pub-tools">
+      <div class="chips" role="group" aria-label="Filter by research direction" id="chips"></div>
+      <div class="search">
+        <label class="sr-only" for="q">Search publications</label>
+        <input type="search" id="q" placeholder="Search titles, authors, journals" autocomplete="off">
+        <label class="switch"><input type="checkbox" id="sumtog" checked> Show summaries</label>
+      </div>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+    <ol class="pubs" id="pubs" reversed></ol>
+    <p class="more">Also on <a href="https://scholar.google.com/citations?user=LKzkz-kAAAAJ&amp;hl=en">Google Scholar</a> and <a href="https://orcid.org/0000-0003-2869-0165">ORCID</a>.</p>
+  </div>
+</section>
+
+<section class="block" id="notes" aria-labelledby="notes-h">
+  <div class="wrap">
+    <h2 id="notes-h">Reading notes</h2>
+    <p class="intro" style="font-size:18px;margin-bottom:24px">Papers I find interesting, with a few lines on why.</p>
+    <details class="note">
+      <summary>
+        <span class="tw" aria-hidden="true">▸</span>
+        <span>
+          <span class="t">RNNs incrementally evolving on an equilibrium manifold: a panacea for vanishing and exploding gradients?</span>
+          <span class="m">Anil Kag, Ziming Zhang, Venkatesh Saligrama. <em>ICLR</em> 2020</span>
+        </span>
+      </summary>
+      <div class="b">
+        <p>This paper’s key insight is how to exploit effective equilibrium dynamics of the state vector as well as the discrete samples by virtue of the combination of “inherent” low pass filtering, as encoded by the decay term, and slowly time varying input. The implementation is done by including hidden variable whose dynamics are identical to that of visible ones but crucially happen on different timescale.</p>
+        <p>This idea is tightly related to cell differentiation under epigenetic modification. The latter is modeled by epigenetic parameters that do not necessarily obey the same dynamics as that of genes.</p>
+        <p><a href="https://iclr.cc/virtual_2020/poster_HylpqA4FwS.html">Paper and poster at ICLR 2020</a></p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="block" id="about" aria-labelledby="about-h">
+  <div class="wrap about-grid">
+    <div>
+      <h2 id="about-h">About</h2>
+      <ol class="tl" reversed>
+        <li><span class="when">2024–now</span><span class="what">Research fellow, Dutch Institute for Emergent Phenomena, University of Amsterdam<br><span>Programme on polarisation, segregation and inequality</span></span></li>
+        <li><span class="when">2022–2024</span><span class="what">Postdoctoral fellow, Niels Bohr Institute, University of Copenhagen</span></li>
+        <li><span class="when">2021–2022</span><span class="what">Postdoctoral researcher, Complexity Science Hub Vienna</span></li>
+        <li><span class="when">2017–2021</span><span class="what">PhD, Medical University of Vienna<br><span>Section for Science of Complex Systems; thesis on complex networks</span></span></li>
+        <li><span class="when">Earlier</span><span class="what">Theoretical physics at the École Normale Supérieure, Paris, and Belgorod National Research University</span></li>
+      </ol>
+    </div>
+    <div class="contact">
+      <h2>Contact</h2>
+      <p class="mail"><a href="mailto:m.t.pham@uva.nl">m.t.pham@uva.nl</a></p>
+      <p>Institute of Physics, University of Amsterdam<br>Science Park 904, 1098 XH Amsterdam</p>
+      <p class="profiles"><a href="https://scholar.google.com/citations?user=LKzkz-kAAAAJ&amp;hl=en">Google Scholar</a><a href="https://orcid.org/0000-0003-2869-0165">ORCID</a><a href="https://www.linkedin.com/in/tuan-pham-minh-39507122/">LinkedIn</a><a href="https://arxiv.org/search/?searchtype=author&amp;query=Pham%2C+Tuan+Minh">arXiv</a></p>
+      <p style="color:var(--ink-2)">I’m happy to hear from students and potential collaborators working on neural networks, stochastic thermodynamics, social dynamics and biological adaptation.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Tuan Minh Pham</span>
+    <span>The simulation runs entirely in your browser. Last updated November 2026.</span>
+  </div>
+</footer>
+
+<script>
+/* Network with stochastically time-evolving asymmetric couplings
+   (model of Pham & Gupta, arXiv:2603.27658):
+     dx_i/dt = -x_i + F( sum_{j!=i} J_ij(t) x_j ) + zeta_i,   <zeta zeta> = 2T delta
+     J_ij(t) = mu/N + (g/sqrt N) Z_ij(t),  Z_ij Ornstein-Uhlenbeck, corr. time tau0,
+     stationary variance q0 = (1 + 2 tau0) / (2 tau0).
+   EPR per unit (Stratonovich):  s = (1/(N T)) sum_i [F(h_i) - x_i] o dx_i/dt            */
+(function (root) {
+  "use strict";
+
+  function makeRng(seed) {
+    let s = seed >>> 0 || 1;
+    let spare = 0, hasSpare = false;
+    function u() { // mulberry32
+      s = (s + 0x6D2B79F5) >>> 0;
+      let t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+    function normal() {
+      if (hasSpare) { hasSpare = false; return spare; }
+      let a, b, r;
+      do { a = 2 * u() - 1; b = 2 * u() - 1; r = a * a + b * b; } while (r >= 1 || r === 0);
+      const m = Math.sqrt(-2 * Math.log(r) / r);
+      spare = b * m; hasSpare = true;
+      return a * m;
+    }
+    return { u, normal };
+  }
+
+  const q0Of = (tau0) => (1 + 2 * tau0) / (2 * tau0);
+
+  function createSim(opts) {
+    opts = opts || {};
+    const N = opts.N || 80;
+    const dt = opts.dt || 0.01;
+    const rng = makeRng(opts.seed || 12345);
+    const p = Object.assign({ g: 0.8, tau0: 2, mu: 0, T: 0.5, F: "tanh" }, opts.params || {});
+    const x = new Float64Array(N);
+    const xNew = new Float64Array(N);
+    const f = new Float64Array(N);
+    const fNew = new Float64Array(N);
+    const Z = new Float64Array(N * N);
+    let q0 = q0Of(p.tau0);
+    let t = 0, fValid = false;
+    // EPR estimator: batch means after a burn-in
+    const acc = { burn: 0, sum: 0, time: 0, batch: 0, batchT: 0, batches: [], unstable: false };
+
+    function initZ() {
+      const sq = Math.sqrt(q0);
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++)
+        Z[i * N + j] = i === j ? 0 : sq * rng.normal();
+    }
+    function initX() {
+      const s = Math.sqrt(Math.max(p.T, 0.05));
+      for (let i = 0; i < N; i++) x[i] = s * rng.normal();
+      fValid = false;
+    }
+    function resetStats(burn) {
+      acc.burn = burn == null ? 4 + Math.min(p.tau0, 20) * 0.25 : burn;
+      acc.sum = 0; acc.time = 0; acc.batch = 0; acc.batchT = 0; acc.batches = [];
+    }
+    initZ(); initX(); resetStats(6);
+
+    const Fn = (h) => (p.F === "linear" ? h : Math.tanh(h));
+
+    function drift(xv, out) {
+      const gN = p.g / Math.sqrt(N), mN = p.mu / N;
+      let sx = 0;
+      for (let j = 0; j < N; j++) sx += xv[j];
+      for (let i = 0; i < N; i++) {
+        let h = 0;
+        const row = i * N;
+        for (let j = 0; j < N; j++) h += Z[row + j] * xv[j];
+        h = gN * h + mN * (sx - xv[i]);
+        out[i] = Fn(h) - xv[i];
+      }
+    }
+
+    function step(nsteps) {
+      const a = Math.exp(-dt / p.tau0);
+      const b = Math.sqrt(q0 * (1 - a * a));
+      const nz = Math.sqrt(2 * p.T * dt);
+      const NN = N * N;
+      for (let s = 0; s < nsteps; s++) {
+        if (!fValid) { drift(x, f); fValid = true; }
+        let blown = false;
+        for (let i = 0; i < N; i++) {
+          const v = x[i] + f[i] * dt + nz * rng.normal();
+          xNew[i] = v;
+          if (!(Math.abs(v) < 1e3)) blown = true;
+        }
+        for (let k = 0; k < NN; k++) Z[k] = a * Z[k] + b * rng.normal();
+        for (let i = 0; i < N; i++) Z[i * N + i] = 0;
+        if (blown) { acc.unstable = true; initX(); resetStats(); t += dt; continue; }
+        drift(xNew, fNew);
+        let ds = 0;
+        for (let i = 0; i < N; i++) ds += 0.5 * (f[i] + fNew[i]) * (xNew[i] - x[i]);
+        ds /= N * p.T; // entropy produced per unit during dt
+        x.set(xNew); f.set(fNew);
+        t += dt;
+        if (acc.burn > 0) { acc.burn -= dt; continue; }
+        acc.sum += ds; acc.time += dt;
+        acc.batch += ds; acc.batchT += dt;
+        if (acc.batchT >= 2) {
+          acc.batches.push(acc.batch / acc.batchT);
+          if (acc.batches.length > 400) acc.batches.shift();
+          acc.batch = 0; acc.batchT = 0;
+        }
+      }
+    }
+
+    function estimate() {
+      const B = acc.batches;
+      const settling = acc.burn > 0 || B.length < 2;
+      if (settling) return { settling: true, unstable: acc.unstable, time: acc.time };
+      let m = 0;
+      for (const v of B) m += v;
+      m /= B.length;
+      let v2 = 0;
+      for (const v of B) v2 += (v - m) * (v - m);
+      const se = Math.sqrt(v2 / (B.length - 1) / B.length);
+      return { settling: false, mean: m, se, n: B.length, time: acc.time, unstable: acc.unstable };
+    }
+
+    function set(np) {
+      const old = Object.assign({}, p);
+      Object.assign(p, np);
+      if (p.tau0 !== old.tau0) {
+        const qn = q0Of(p.tau0);
+        const r = Math.sqrt(qn / q0);
+        for (let k = 0; k < N * N; k++) Z[k] *= r;
+        q0 = qn;
+      }
+      let ss = 0;
+      for (let i = 0; i < N; i++) ss += x[i] * x[i];
+      if ((p.F !== old.F && p.F === "linear") || acc.unstable || !(Math.sqrt(ss / N) < 30)) initX();
+      fValid = false;
+      acc.unstable = false;
+      resetStats();
+    }
+
+    return {
+      N, dt, x, Z, params: p, step, set, estimate,
+      get t() { return t; }, get q0() { return q0; },
+      resample() { initZ(); initX(); acc.unstable = false; resetStats(6); },
+    };
+  }
+
+  /* ---- exact DMFT result for linear F (mu = 0), Pham & Gupta 2026 ----
+     s = 1 + (g^2 q0 - 1)/(g sqrt q0) * J_nu(z0)/J'_nu(z0),  nu = 2 tau0,  z0 = 2 tau0 g sqrt q0
+     valid below the stability line (first zero of J'_nu).                                   */
+  function besselDlogJ(nu, z) { // J'_nu(z)/J_nu(z) by continued fraction (modified Lentz)
+    const EPS = 1e-14, FPMIN = 1e-300;
+    const xi = 1 / z, xi2 = 2 * xi;
+    let h = nu * xi; if (h < FPMIN) h = FPMIN;
+    let b = xi2 * nu, d = 0, c = h;
+    for (let i = 1; i <= 200000; i++) {
+      b += xi2;
+      d = b - d; if (Math.abs(d) < FPMIN) d = FPMIN;
+      c = b - 1 / c; if (Math.abs(c) < FPMIN) c = FPMIN;
+      d = 1 / d;
+      const del = c * d;
+      h *= del;
+      if (Math.abs(del - 1) < EPS) return h;
+    }
+    return NaN;
+  }
+
+  // first zero of J'_nu (j'_{nu,1} > nu always): scan upward, then bisect
+  const jpCache = new Map();
+  function firstZeroDJ(nu) {
+    const key = nu.toFixed(6);
+    if (jpCache.has(key)) return jpCache.get(key);
+    const dz = 0.002 + 0.01 * Math.cbrt(nu);
+    let lo = nu * (1 + 1e-9), hi = lo;
+    while (besselDlogJ(nu, hi) > 0) { lo = hi; hi += dz; }
+    for (let k = 0; k < 60; k++) {
+      const m = 0.5 * (lo + hi);
+      if (besselDlogJ(nu, m) > 0) lo = m; else hi = m;
+    }
+    if (jpCache.size > 500) jpCache.clear();
+    jpCache.set(key, lo);
+    return lo;
+  }
+
+  // g at which the linear network loses stability (z0 reaches j'_{nu,1})
+  function gCritLinear(tau0) {
+    const nu = 2 * tau0;
+    return firstZeroDJ(nu) / (nu * Math.sqrt(q0Of(tau0)));
+  }
+
+  function eprLinear(g, tau0) {
+    if (g <= 0) return { value: 0, stable: true };
+    const q0 = q0Of(tau0), nu = 2 * tau0, sq = Math.sqrt(q0);
+    const z0 = nu * g * sq;
+    if (z0 >= firstZeroDJ(nu)) return { value: Infinity, stable: false };
+    const r = besselDlogJ(nu, z0);
+    return { value: 1 + (g * g * q0 - 1) / (g * sq) / r, stable: true };
+  }
+
+  const api = { createSim, eprLinear, gCritLinear, q0Of };
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
+  else root.EPRNet = api;
+})(typeof self !== "undefined" ? self : this);
+
+</script>
+<script>
+(function () {
+  "use strict";
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const css = getComputedStyle(document.documentElement);
+  const C = {
+    ink: css.getPropertyValue("--ink").trim() || "#172033",
+    ink3: css.getPropertyValue("--ink-3").trim() || "#667085",
+    rule: css.getPropertyValue("--rule").trim() || "#D8DEE7",
+    rule2: css.getPropertyValue("--rule-2").trim() || "#E8ECF2",
+  };
+  const POS = [200, 39, 79], NEG = [34, 80, 200], MID = [185, 191, 202];
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ================= publications data ================= */
+  const ME = ["Tuan Minh Pham", "Tuan Pham", "Tuan Pham Minh", "T. Fam", "Tuan M. Pham"];
+  const DIRS = { irr: "Irreversibility", adapt: "Adaptation", social: "Social dynamics", net: "Complex networks", early: "Early work" };
+  const PUBS = [
+    { key: "pham2026entropy", year: 2026, title: "Entropy production rate in stochastically time-evolving asymmetric networks",
+      authors: ["Tuan Pham*", "Deepak Gupta*"], note: "* equal contribution", venue: "arXiv preprint", arxiv: "2603.27658", cls: "cond-mat.stat-mech", dir: "irr", feat: true,
+      sum: "Exact entropy production, at any time, for nonlinear networks whose couplings fluctuate with a finite correlation time, interpolating between annealed and quenched disorder. The model in Fig. 1." },
+    { key: "pham2026cellular", year: 2026, title: "Cellular adaptation to signal fluctuations as learning",
+      authors: ["Tuan Minh Pham", "David Saad"], venue: "arXiv preprint", arxiv: "2607.03545", cls: "q-bio.MN", dir: "adapt", feat: true,
+      sum: "A cell’s signal transducers and its gene-regulatory network treated as one adaptive system; robustness to fluctuating signals appears as a transition from random to structured collective modes above a critical adaptation rate." },
+    { key: "vandissel2026symmetric", year: 2026, title: "Symmetric preferences, asymmetric outcomes: tipping dynamics in an open-city segregation model",
+      authors: ["Fabio van Dissel", "Tuan Minh Pham", "Wout Merbis"], venue: "Physical Review Research", vol: "8", pages: "033202", doi: "10.1103/4qgg-wz64", arxiv: "2602.09795", dir: "social", feat: true,
+      sum: "Residential moves modelled as reaction rates in a spatial chemical reaction network. Despite symmetric in-group preferences, the city tips into dominance by one group beyond a critical preference level." },
+    { key: "pham2026polarization", year: 2026, title: "Polarization in increasingly connected societies",
+      authors: ["Tuan Minh Pham", "Sidney Redner", "Lourens Waldorp", "Jay Armas", "Han L. J. van der Maas"], venue: "Physical Review E", vol: "113", pages: "054303", doi: "10.1103/5lwq-2n8m", arxiv: "2503.24098", dir: "social", feat: true,
+      sum: "A voter-type model in which involvement, rather than lack of contact, drives opinions. As average connectivity grows, polarization increases." },
+    { key: "castro2025heterophobic", year: 2025, title: "Heterophobic interactions hinder consensus formation in sparse random networks",
+      authors: ["Alejandro Castro", "Tuan Minh Pham", "Ernesto Ortega", "David Machado"], venue: "Physical Review E", vol: "112", pages: "064309", doi: "10.1103/cxsr-dh25", arxiv: "2506.18513", dir: "social",
+      sum: "Belief propagation and Monte Carlo on sparse signed networks show that a sufficient propensity to heterophobia prevents a consensus that would otherwise emerge through a phase transition." },
+    { key: "waldorp2025meanfield", year: 2025, title: "Mean-field theory of the general-spin Ising model",
+      authors: ["Lourens Waldorp", "Tuan Pham", "Han L. J. van der Maas"], venue: "The European Physical Journal B", vol: "98", pages: "216", doi: "10.1140/epjb/s10051-025-01060-8", dir: "social",
+      sum: "Mean-field theory, from the Gibbs variational principle, for an Ising model whose spins take 2k+1 values, motivated by models in sociology and psychology." },
+    { key: "pham2025irreversibility", year: 2025, title: "Irreversibility in non-reciprocal chaotic systems",
+      authors: ["Tuan Minh Pham", "Albert Alonso", "Karel Proesmans"], venue: "New Journal of Physics", vol: "27", pages: "023003", doi: "10.1088/1367-2630/adae2a", arxiv: "2407.17939", dir: "irr", feat: true,
+      sum: "An exact relation between entropy production and the autocorrelation function in a large network with random non-reciprocal couplings. The entropy production rate changes functional form at the onset of chaos, at a noise-independent value." },
+    { key: "galesic2025experimental", year: 2025, title: "Experimental evidence confirms that triadic social balance can be achieved through dyadic interactions",
+      authors: ["Mirta Galesic", "Henrik Olsson", "Tuan Minh Pham", "Johannes Sorger", "Stefan Thurner"], venue: "npj Complexity", vol: "2", pages: "1", doi: "10.1038/s44260-024-00022-y", dir: "social",
+      sum: "A longitudinal group experiment with 480 participants: triadic social balance emerges even when people attend only to their direct, dyadic relationships." },
+    { key: "pham2024clustering", year: 2024, title: "Effects of clustering heterogeneity on the spectral density of sparse networks",
+      authors: ["Tuan Minh Pham", "Thomas Peron", "Fernando L. Metz"], venue: "Physical Review E", vol: "110", pages: "054307", doi: "10.1103/PhysRevE.110.054307", dir: "net",
+      sum: "Exact equations for the spectral density of sparse networks with an arbitrary distribution of single edges and triangles per node." },
+    { key: "pham2024dynamical", year: 2024, title: "Dynamical theory for adaptive systems",
+      authors: ["Tuan Minh Pham", "Kunihiko Kaneko"], venue: "Journal of Statistical Mechanics: Theory and Experiment", vol: "2024", pages: "113501", doi: "10.1088/1742-5468/ad8223", arxiv: "2306.01403", dir: "adapt", feat: true,
+      sum: "A path-integral theory for systems with fast states and slowly adapting parameters, applied to gene-regulatory networks under a dynamic genotype–phenotype map: phenotypic robustness emerges at intermediate environmental noise." },
+    { key: "heiler2023criminal", year: 2023, title: "A large-scale empirical investigation of specialization in criminal career",
+      authors: ["Georg Heiler", "Tuan Pham", "Jan Korbel", "Johannes Wachs", "Stefan Thurner"], venue: "Scientific Reports", vol: "13", pages: "17160", doi: "10.1038/s41598-023-43552-6", dir: "social",
+      sum: "Six years of longitudinal data on criminal acts in a European country give a data-driven taxonomy of criminal specialization. Specialists work in smaller, more tightly knit collaboration networks than generalists." },
+    { key: "pham2023double", year: 2023, title: "Double-replica theory for evolution of genotype-phenotype interrelationship",
+      authors: ["Tuan Minh Pham", "Kunihiko Kaneko"], venue: "Physical Review Research", vol: "5", pages: "023049", doi: "10.1103/PhysRevResearch.5.023049", arxiv: "2211.15283", dir: "adapt", feat: true,
+      sum: "Replicas for both phenotypes (spins) and genotypes (couplings) give the phase diagram of evolving genotype–phenotype relations, with a robust phase at intermediate noise where robustness to noise and to mutation are correlated." },
+    { key: "korbel2023homophily", year: 2023, title: "Homophily-based social group formation in a spin glass self-assembly framework",
+      authors: ["Jan Korbel", "Simon D. Lindner", "Tuan Minh Pham", "Rudolf Hanel", "Stefan Thurner"], venue: "Physical Review Letters", vol: "130", pages: "057401", doi: "10.1103/PhysRevLett.130.057401", arxiv: "2211.12210", dir: "social", extra: "Editors’ Suggestion", feat: true,
+      sum: "Opinions as multidimensional spins that self-assemble into groups; a spin-glass framework for how homophily shapes social groups and their size distribution." },
+    { key: "pham2022empirical", year: 2022, title: "Empirical social triad statistics can be explained with dyadic homophylic interactions",
+      authors: ["Tuan Minh Pham", "Jan Korbel", "Rudolf Hanel", "Stefan Thurner"], venue: "Proceedings of the National Academy of Sciences", vol: "119", pages: "e2121103119", doi: "10.1073/pnas.2121103119", dir: "social", feat: true,
+      sum: "The over-represented balanced triangles of real social networks follow from individuals minimizing dyadic, homophily-driven stress, with no need to consider triads." },
+    { key: "pham2021balance", year: 2021, title: "Balance and fragmentation in societies with homophily and social balance",
+      authors: ["Tuan Minh Pham", "Andrew C. Alexander", "Jan Korbel", "Rudolf Hanel", "Stefan Thurner"], venue: "Scientific Reports", vol: "11", pages: "17188", doi: "10.1038/s41598-021-96065-5", arxiv: "2012.11221", dir: "social",
+      sum: "When individuals account for a large enough fraction of their triadic relations on top of homophily, societies always reach stationary, balanced and fragmented states." },
+    { key: "pham2020effect", year: 2020, title: "The effect of social balance on social fragmentation",
+      authors: ["Tuan Minh Pham", "Imre Kondor", "Rudolf Hanel", "Stefan Thurner"], venue: "Journal of the Royal Society Interface", vol: "17", pages: "20200752", doi: "10.1098/rsif.2020.0752", arxiv: "2005.01815", dir: "social",
+      sum: "A critical level of interconnectedness above which a society fragments into internally cohesive, mutually hostile groups, rooted in a spin-glass phase transition." },
+    { key: "horstmeyer2020predicting", year: 2020, title: "Predicting collapse of adaptive networked systems without knowing the network",
+      authors: ["Leonhard Horstmeyer", "Tuan Minh Pham", "Jan Korbel", "Stefan Thurner"], venue: "Scientific Reports", vol: "10", pages: "1223", doi: "10.1038/s41598-020-57751-y", dir: "net",
+      sum: "An early-warning signal for the collapse of networked systems with linear or linearized dynamics, such as the loss of their last autocatalytic cycle, computed without detailed knowledge of the network." },
+    { key: "ramadiah2020network", year: 2020, title: "Network sensitivity of systemic risk",
+      authors: ["Amanah Ramadiah", "Domenico Di Gangi", "D. Ruggiero Lo Sardo", "Valentina Macchiati", "Tuan Pham Minh", "Francesco Pinotti", "Mateusz Wilinski", "Paolo Barucca", "Giulio Cimini"], venue: "Journal of Network Theory in Finance", vol: "5", issue: "3", pages: "53–72", doi: "10.21314/JNTF.2019.056", arxiv: "1805.04325", dir: "net",
+      sum: "How shock propagation in financial networks depends on topology, using reconstructed networks consistent with balance-sheet data. Systemic risk turns out to be extremely sensitive to network features." },
+    { key: "molinagarcia2016fractional", year: 2016, title: "Fractional kinetics emerging from ergodicity breaking in random media",
+      authors: ["Daniel Molina-García", "Tuan Minh Pham", "Paolo Paradisi", "Carlo Manzo", "Gianni Pagnini"], venue: "Physical Review E", vol: "94", pages: "052147", doi: "10.1103/PhysRevE.94.052147", arxiv: "1508.01361", dir: "early",
+      sum: "Diffusion in a medium with a random length scale reproduces the ergodicity breaking and aging seen in single-particle tracking in living cells, and shows fractional kinetics emerging from ergodicity breaking." },
+    { key: "pham2016phase", year: 2016, title: "Phase diagram analysis of noise-induced transition in an autocatalytic reaction",
+      authors: ["Tuan Minh Pham", "Yu. P. Virchenko"], venue: "Journal of Physics: Conference Series", vol: "769", pages: "012026", doi: "10.1088/1742-6596/769/1/012026", dir: "early",
+      sum: "The phase diagram of a noise-induced transition in a stochastic model of an autocatalytic reaction." },
+    { key: "pham2016exhaustive", year: 2016, title: "Exhaustive study of the noise-induced phase transition in a stochastic model of self-catalyzed reactions",
+      authors: ["Tuan Minh Pham", "Yu. P. Virchenko"], venue: "Theoretical and Mathematical Physics", vol: "188", issue: "2", pages: "1236–1252", doi: "10.1134/S0040577916080079", dir: "early",
+      sum: "A complete analysis of the noise-induced phase transition in a stochastic model of self-catalysed reactions." },
+    { key: "irribarra2016enhancement", year: 2016, title: "Enhancement effects of transition and Vavilov–Cherenkov radiation mechanisms under grazing interaction of fast electrons with a thick substrate applied by thin layer",
+      authors: ["E. Irribarra", "A. S. Kubankin", "A. Sotnikov", "R. M. Nazhmudinov", "T. Fam", "A. P. Starovoytov"], venue: "IOP Conference Series: Materials Science and Engineering", vol: "142", pages: "012038", doi: "10.1088/1757-899X/142/1/012038", dir: "early",
+      sum: "Transition and Vavilov–Cherenkov radiation from fast electrons at grazing incidence on a thick substrate coated with a thin layer." },
+  ];
+
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const isMe = (a) => ME.includes(a.replace("*", ""));
+  const linkOf = (p) => (p.doi ? "https://doi.org/" + p.doi : "https://arxiv.org/abs/" + p.arxiv);
+  const shortVenue = (p) => ({
+    "Physical Review E": "Phys. Rev. E", "New Journal of Physics": "New J. Phys.", "Journal of Statistical Mechanics: Theory and Experiment": "J. Stat. Mech.",
+    "Physical Review Research": "Phys. Rev. Research", "Physical Review Letters": "Phys. Rev. Lett.", "Proceedings of the National Academy of Sciences": "PNAS",
+    "Scientific Reports": "Sci. Rep.", "Journal of the Royal Society Interface": "J. R. Soc. Interface", "arXiv preprint": "arXiv" }[p.venue] || p.venue);
+
+  function bibtex(p) {
+    const BIBNAME = { "Domenico Di Gangi": "Di Gangi, Domenico", "D. Ruggiero Lo Sardo": "Lo Sardo, D. Ruggiero", "Tuan Pham Minh": "Pham Minh, Tuan",
+      "Fabio van Dissel": "van Dissel, Fabio", "Han L. J. van der Maas": "van der Maas, Han L. J." };
+    const au = p.authors.map((a) => { a = a.replace("*", ""); if (BIBNAME[a]) return BIBNAME[a]; const n = a.split(" "); const last = n.pop(); return last + ", " + n.join(" "); }).join(" and ");
+    const f = [["author", au], ["title", "{" + p.title + "}"]];
+    let type = "article";
+    if (p.doi) {
+      f.push(["journal", p.venue], ["volume", p.vol]);
+      if (p.issue) f.push(["number", p.issue]);
+      f.push(["pages", String(p.pages).replace("–", "--")], ["year", p.year], ["doi", p.doi]);
+      if (p.arxiv) f.push(["eprint", p.arxiv], ["archivePrefix", "arXiv"]);
+    } else {
+      type = "misc";
+      f.push(["year", p.year], ["eprint", p.arxiv], ["archivePrefix", "arXiv"], ["primaryClass", p.cls]);
+    }
+    return "@" + type + "{" + p.key + ",\n" + f.map(([k, v]) => "  " + k + " = {" + v + "}").join(",\n") + "\n}";
+  }
+
+  // key papers in the research rows
+  $$(".dir .papers ul").forEach((ul) => {
+    const d = ul.dataset.dir;
+    ul.innerHTML = PUBS.filter((p) => p.dir === d && p.feat).slice(0, 4).map((p) =>
+      `<li><a href="${linkOf(p)}">${esc(p.title.charAt(0).toUpperCase() + p.title.slice(1))}</a><br><span>${esc(shortVenue(p))} ${p.year}</span></li>`).join("");
+  });
+
+  const state = { dir: "all", q: "" };
+  const chipsEl = $("#chips");
+  const chipDefs = [["all", "All", PUBS.length]].concat(Object.entries(DIRS).map(([k, v]) => [k, v, PUBS.filter((p) => p.dir === k).length]));
+  chipsEl.innerHTML = chipDefs.map(([k, v, n]) => `<button class="chip" type="button" data-dir="${k}" aria-pressed="${k === "all"}">${esc(v)}<span>${n}</span></button>`).join("");
+
+  function renderPubs() {
+    const q = state.q.trim().toLowerCase();
+    const list = PUBS.filter((p) => (state.dir === "all" || p.dir === state.dir) &&
+      (!q || [p.title, p.authors.join(" "), p.venue, p.year, p.arxiv || ""].join(" ").toLowerCase().includes(q)));
+    const ol = $("#pubs");
+    if (!list.length) {
+      ol.innerHTML = `<li class="empty">No papers match “${esc(state.q)}”${state.dir !== "all" ? " in " + esc(DIRS[state.dir]) : ""}. <button class="btn" type="button" id="clear">Clear filters</button></li>`;
+      $("#clear").onclick = () => { state.dir = "all"; state.q = ""; $("#q").value = ""; syncChips(); renderPubs(); };
+    } else {
+      let last = null;
+      ol.innerHTML = list.map((p) => {
+        const yr = p.year !== last ? p.year : ""; last = p.year;
+        const au = p.authors.map((a) => (isMe(a) ? `<b>${esc(a)}</b>` : esc(a))).join(", ");
+        const ven = p.doi ? (String(p.vol) === String(p.year) ? `<em>${esc(p.venue)}</em> (${p.year}) ${esc(p.pages)}` : `<em>${esc(p.venue)}</em> ${esc(p.vol)}${p.issue ? "(" + esc(p.issue) + ")" : ""}, ${esc(p.pages)} (${p.year})`) : `<em>arXiv</em>:${esc(p.arxiv)} (${p.year})`;
+        return `<li class="pub" data-key="${p.key}">
+          <span class="yr">${yr}</span>
+          <div>
+            <p class="ttl"><a href="${linkOf(p)}">${esc(p.title.charAt(0).toUpperCase() + p.title.slice(1))}</a></p>
+            <p class="au">${au}${p.note ? ` <span style="color:var(--ink-3)">(${esc(p.note)})</span>` : ""}</p>
+            <p class="ven">${ven}${p.extra ? `, ${esc(p.extra)}` : ""}</p>
+            <p class="sum">${esc(p.sum)}</p>
+            <div class="acts">
+              ${p.arxiv ? `<a href="https://arxiv.org/abs/${p.arxiv}">arXiv</a>` : ""}
+              ${p.doi ? `<a href="https://doi.org/${p.doi}">Journal</a>` : ""}
+              <button type="button" data-bib="${p.key}">Copy BibTeX</button>
+              <span class="tags">${esc(DIRS[p.dir])}</span>
+            </div>
+          </div>
+        </li>`;
+      }).join("");
+    }
+    $("#count").textContent = list.length === PUBS.length ? `${PUBS.length} papers` : `Showing ${list.length} of ${PUBS.length} papers`;
+  }
+  function syncChips() { $$(".chip", chipsEl).forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.dir === state.dir))); }
+  chipsEl.addEventListener("click", (e) => { const b = e.target.closest(".chip"); if (!b) return; state.dir = b.dataset.dir; syncChips(); renderPubs(); });
+  $("#q").addEventListener("input", (e) => { state.q = e.target.value; renderPubs(); });
+  $("#sumtog").addEventListener("change", (e) => $("#pubs").classList.toggle("nosum", !e.target.checked));
+  $("#pubs").addEventListener("click", async (e) => {
+    const b = e.target.closest("[data-bib]"); if (!b) return;
+    const p = PUBS.find((x) => x.key === b.dataset.bib);
+    const text = bibtex(p);
+    let ok = false;
+    try { await navigator.clipboard.writeText(text); ok = true; } catch (_) {
+      const ta = document.createElement("textarea"); ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); try { ok = document.execCommand("copy"); } catch (_) {} ta.remove();
+    }
+    b.textContent = ok ? "Copied" : "Copy failed: select the text manually";
+    setTimeout(() => (b.textContent = "Copy BibTeX"), 1600);
+  });
+  $$("[data-show]").forEach((b) => b.addEventListener("click", () => {
+    state.dir = b.dataset.show; state.q = ""; $("#q").value = ""; syncChips(); renderPubs();
+    $("#publications").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+  }));
+  renderPubs();
+
+  /* ================= nav ================= */
+  const nav = $(".nav");
+  const onScroll = () => nav.classList.toggle("scrolled", window.scrollY > 8);
+  window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
+  const navLinks = $$(".nav ul a");
+  const spy = new IntersectionObserver((ents) => {
+    ents.forEach((en) => { if (en.isIntersecting) navLinks.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + en.target.id))); });
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  ["model", "research", "publications", "notes", "about"].forEach((id) => spy.observe(document.getElementById(id)));
+
+  /* ================= simulation ================= */
+  const E = window.EPRNet;
+  const N = 80;
+  const sim = E.createSim({ N, dt: 0.01, seed: 20260329, params: { g: 0.8, tau0: 1, mu: 0, T: 0.5, F: "tanh" } });
+  const P = sim.params;
+  let running = !reduceMotion, visible = true;
+  let stepsPerFrame = 20;
+
+  const net = $("#net"), trace = $("#trace");
+  const nctx = net.getContext("2d"), tctx = trace.getContext("2d");
+  let S = 0, dpr = 1, TW = 0, TH = 0;
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = net.clientWidth; S = w;
+    net.width = Math.round(w * dpr); net.height = Math.round(w * dpr);
+    TW = trace.clientWidth; TH = trace.clientHeight;
+    trace.width = Math.round(TW * dpr); trace.height = Math.round(TH * dpr);
+    drawNet(); drawTrace();
+  }
+  new ResizeObserver(resize).observe(net);
+
+  const pos = Array.from({ length: N }, (_, i) => { const a = (2 * Math.PI * i) / N - Math.PI / 2; return [Math.cos(a), Math.sin(a)]; });
+  let xrms = 0.5;
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  function divColor(v) { // v in [-1,1]
+    v = Math.max(-1, Math.min(1, v));
+    const c = v >= 0 ? mix(MID, POS, v) : mix(MID, NEG, -v);
+    return `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`;
+  }
+
+  function drawNet() {
+    if (!S) return;
+    const ctx = nctx;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, S, S);
+    const cx = S / 2, cy = S / 2, R = S * 0.42;
+    ctx.strokeStyle = C.rule2; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    const Z = sim.Z, sq = Math.sqrt(sim.q0), thr = 2.4 * sq;
+    const gAlpha = Math.min(1, 0.25 + P.g / 0.8);
+    ctx.lineCap = "round";
+    for (let i = 0; i < N; i++) {
+      const row = i * N;
+      for (let j = 0; j < N; j++) {
+        const z = Z[row + j];
+        if (Math.abs(z) < thr) continue;
+        const J = P.mu / N + (P.g / Math.sqrt(N)) * z;
+        const s = Math.min(1, (Math.abs(z) - thr) / (1.4 * sq));
+        const col = J >= 0 ? POS : NEG;
+        // edge from source j to target i
+        const x0 = cx + R * pos[j][0], y0 = cy + R * pos[j][1];
+        const x1 = cx + R * pos[i][0], y1 = cy + R * pos[i][1];
+        const mx = (x0 + x1) / 2, my = (y0 + y1) / 2;
+        const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy);
+        const k = 0.3, off = 0.09;
+        const qx = cx + (mx - cx) * (1 - k) + (-dy / L) * off * L;
+        const qy = cy + (my - cy) * (1 - k) + (dx / L) * off * L;
+        const a = (0.35 + 0.6 * s) * gAlpha;
+        const grad = ctx.createLinearGradient(x0, y0, x1, y1);
+        grad.addColorStop(0, `rgba(${col[0]},${col[1]},${col[2]},0.04)`);
+        grad.addColorStop(1, `rgba(${col[0]},${col[1]},${col[2]},${a.toFixed(3)})`);
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 0.9 + 1.4 * s;
+        ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(qx, qy, x1, y1); ctx.stroke();
+      }
+    }
+    // nodes
+    let ss = 0; for (let i = 0; i < N; i++) ss += sim.x[i] * sim.x[i];
+    const r = Math.sqrt(ss / N);
+    if (isFinite(r) && r > 0) xrms = 0.92 * xrms + 0.08 * r;
+    const nr = Math.max(3, S / 105);
+    ctx.lineWidth = 2; ctx.strokeStyle = "#fff";
+    for (let i = 0; i < N; i++) {
+      const x = cx + R * pos[i][0], y = cy + R * pos[i][1];
+      ctx.beginPath(); ctx.arc(x, y, nr, 0, Math.PI * 2);
+      ctx.fillStyle = divColor(sim.x[i] / (2 * xrms + 1e-9));
+      ctx.fill(); ctx.stroke();
+    }
+  }
+
+  // traces of three units over the last 30 time units
+  const TR_LEN = 1200, TR_UNITS = [3, 31, 58], TR_SPAN = 30;
+  const tr = TR_UNITS.map(() => new Float32Array(TR_LEN));
+  const trT = new Float64Array(TR_LEN);
+  let trHead = 0, trCount = 0;
+  function pushTrace() {
+    trT[trHead] = sim.t;
+    TR_UNITS.forEach((u, k) => (tr[k][trHead] = sim.x[u]));
+    trHead = (trHead + 1) % TR_LEN; trCount = Math.min(TR_LEN, trCount + 1);
+  }
+  let trScale = 1;
+  function drawTrace() {
+    if (!TW) return;
+    const ctx = tctx; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, TW, TH);
+    const top = 20, mid = top + (TH - top) / 2, half = (TH - top) / 2 - 2;
+    ctx.fillStyle = C.ink3; ctx.font = `13px ${css.getPropertyValue("--sans")}`;
+    ctx.fillText("Activity of three units over the last 30 time units", 0, 13);
+    ctx.strokeStyle = C.rule2; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, mid); ctx.lineTo(TW, mid); ctx.stroke();
+    if (trCount < 2) return;
+    const tNow = trT[(trHead - 1 + TR_LEN) % TR_LEN];
+    let m = 1e-6; tr.forEach((a) => { for (let i = 0; i < trCount; i++) { const idx = (trHead - 1 - i + TR_LEN) % TR_LEN; if (tNow - trT[idx] > TR_SPAN) break; m = Math.max(m, Math.abs(a[idx])); } });
+    trScale = Math.max(m, 0.8 * trScale + 0.2 * m);
+    const alphas = [0.85, 0.5, 0.28];
+    ctx.lineWidth = 1.25; ctx.lineJoin = "round";
+    tr.forEach((a, k) => {
+      ctx.strokeStyle = `rgba(23,32,51,${alphas[k]})`; ctx.beginPath();
+      let started = false;
+      for (let i = 0; i < trCount; i++) {
+        const idx = (trHead - trCount + i + TR_LEN) % TR_LEN;
+        const age = tNow - trT[idx];
+        if (age > TR_SPAN) continue;
+        const x = TW - (age / TR_SPAN) * TW;
+        const y = mid - (a[idx] / (trScale * 1.05)) * half;
+        started ? ctx.lineTo(x, y) : ctx.moveTo(x, y); started = true;
+      }
+      ctx.stroke();
+    });
+  }
+
+  /* ---------- controls ---------- */
+  const tauEl = $("#tau"), gEl = $("#g"), muEl = $("#mu"), TEl = $("#T");
+  const fmtTau = (v) => (v < 1 ? v.toFixed(2) : v < 10 ? v.toFixed(1) : v.toFixed(0));
+  function syncOutputs() {
+    $("#tau-o").textContent = fmtTau(P.tau0);
+    $("#g-o").textContent = P.g.toFixed(2);
+    $("#mu-o").textContent = P.mu.toFixed(2);
+    $("#T-o").textContent = P.T.toFixed(2);
+    $$(".seg button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.F === P.F)));
+    const lin = P.F === "linear";
+    $("#mu-ctl").classList.toggle("off", lin); muEl.disabled = lin;
+  }
+  function syncSliders() {
+    tauEl.value = Math.log10(P.tau0); gEl.value = P.g; muEl.value = P.mu; TEl.value = P.T;
+    syncOutputs();
+  }
+
+  // measured points for the plot: kept while tau0, F (and for tanh, mu and T) stay the same
+  let points = [];
+  let pointsKey = "";
+  const keyOf = () => (P.F === "linear" ? `lin|${P.tau0.toFixed(4)}` : `tanh|${P.tau0.toFixed(4)}|${P.mu}|${P.T}`);
+  function commitEstimate() {
+    const e = sim.estimate();
+    if (e.settling || e.n < 8 || e.unstable) return;
+    const g = P.g;
+    points = points.filter((p) => Math.abs(p.g - g) > 0.015);
+    points.push({ g, m: e.mean, se: e.se, th: P.F === "linear" ? E.eprLinear(g, P.tau0) : null });
+  }
+  function apply(np) {
+    commitEstimate();
+    if (np.F === "linear") np.mu = 0;
+    sim.set(np);
+    const k = keyOf();
+    if (k !== pointsKey) { points = []; pointsKey = k; }
+    if ("F" in np || "mu" in np) muEl.value = P.mu;
+    syncOutputs(); lastEst = null; updateReadout(true); drawPlot();
+    if (!running) drawNet();
+  }
+  tauEl.addEventListener("input", () => apply({ tau0: Math.round(Math.pow(10, +tauEl.value) * 1000) / 1000 }));
+  gEl.addEventListener("input", () => apply({ g: +gEl.value }));
+  muEl.addEventListener("input", () => apply({ mu: +muEl.value }));
+  TEl.addEventListener("input", () => apply({ T: +TEl.value }));
+  $$(".seg button").forEach((b) => b.addEventListener("click", () => apply({ F: b.dataset.F })));
+  const PRESETS = {
+    theory: { F: "linear", tau0: 1, g: 0.8, mu: 0, T: 0.5 },
+    fast: { F: "tanh", tau0: 0.1, g: 1, mu: 0, T: 0.5 },
+    frozen: { F: "tanh", tau0: 100, g: 1.8, mu: 0, T: 0.1 },
+    ordered: { F: "tanh", tau0: 3, g: 0.5, mu: 2, T: 0.2 },
+  };
+  $$("[data-preset]").forEach((b) => b.addEventListener("click", () => { apply(Object.assign({}, PRESETS[b.dataset.preset])); syncSliders(); }));
+  const playBtn = $("#play");
+  function syncPlay() { playBtn.textContent = running ? "Pause" : "Play"; playBtn.setAttribute("aria-pressed", String(!running)); }
+  playBtn.addEventListener("click", () => { running = !running; syncPlay(); });
+  $("#resample").addEventListener("click", () => { sim.resample(); points = []; trCount = 0; drawPlot(); drawNet(); drawTrace(); });
+
+  /* ---------- readout ---------- */
+  let lastReadout = 0;
+  function updateReadout(force) {
+    const now = performance.now();
+    if (!force && now - lastReadout < 300) return;
+    lastReadout = now;
+    const e = sim.estimate();
+    const st = $("#status");
+    const th = P.F === "linear" ? E.eprLinear(P.g, P.tau0) : null;
+    const gc = E.gCritLinear(P.tau0);
+    if (e.unstable && P.F === "linear") {
+      $("#r-sim").innerHTML = "diverges";
+    } else if (e.settling) {
+      $("#r-sim").innerHTML = `<small>${running ? "measuring…" : "paused"}</small>`;
+    } else {
+      $("#r-sim").innerHTML = `${e.mean.toFixed(3)} <small>± ${e.se.toFixed(3)}, ${Math.round(e.time)} time units</small>`;
+    }
+    if (P.F !== "linear") {
+      $("#r-th").innerHTML = `<small>closed form only for linear <i style="font-family:var(--serif)">F</i></small>`;
+    } else if (th && th.stable) {
+      $("#r-th").innerHTML = `${th.value.toFixed(3)} <small>Pham &amp; Gupta (2026)</small>`;
+    } else {
+      $("#r-th").innerHTML = `<small>unstable for <i style="font-family:var(--serif)">g</i> &gt; ${gc.toFixed(2)}</small>`;
+    }
+    st.classList.toggle("warn", P.F === "linear" && !(th && th.stable));
+    if (P.F === "linear" && !(th && th.stable)) {
+      st.textContent = `Beyond the stability line: at τ0 = ${fmtTau(P.tau0)} a linear network diverges for g > ${gc.toFixed(2)}. Lower g or switch to tanh.`;
+    } else if (P.F === "linear") {
+      st.textContent = "Drag g and wait for the estimate to settle; each measurement is added to the plot.";
+    } else if (P.tau0 >= 50) {
+      st.textContent = "Couplings are effectively frozen: the arcs barely change, but the units keep moving.";
+    } else if (P.tau0 <= 0.2) {
+      st.textContent = "Fast-fluctuating couplings keep the network active and dissipative.";
+    } else {
+      st.textContent = "";
+    }
+    drawPlotLive(e);
+  }
+
+  /* ---------- plot ---------- */
+  const svg = $("#plot"), NS = "http://www.w3.org/2000/svg";
+  let PW = 400; const PH = 210, M = { l: 38, r: 10, t: 14, b: 34 };
+  let iw = PW - M.l - M.r; const ih = PH - M.t - M.b;
+  let ymax = 2, lastEst = null;
+  const sx = (g) => M.l + (g / 2) * iw, sy = (v) => M.t + ih - (v / ymax) * ih;
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); (parent || svg).appendChild(n); return n; };
+  const layer = { base: el("g", {}), data: el("g", {}), live: el("g", {}), hover: el("g", {}) };
+  el("clipPath", { id: "clip" }).appendChild(Object.assign(document.createElementNS(NS, "rect"), {}));
+  $("#clip rect").setAttribute("x", M.l); $("#clip rect").setAttribute("y", M.t - 2);
+  $("#clip rect").setAttribute("width", iw); $("#clip rect").setAttribute("height", ih + 2);
+  function sizePlot() {
+    const w = Math.round(svg.getBoundingClientRect().width) || 400;
+    if (Math.abs(w - PW) < 2) return;
+    PW = Math.max(280, w); iw = PW - M.l - M.r;
+    svg.setAttribute("viewBox", `0 0 ${PW} ${PH}`);
+    $("#clip rect").setAttribute("width", iw);
+    drawPlot(); if (lastEst) drawPlotLive(lastEst);
+  }
+  const niceCeil = (v) => { const steps = [1, 1.5, 2, 3, 4, 5, 6, 8, 10, 15, 20]; for (const s of steps) if (v <= s) return s; return 20; };
+
+  function drawPlot() {
+    [layer.base, layer.data].forEach((g) => (g.innerHTML = ""));
+    const gc = E.gCritLinear(P.tau0);
+    const gEnd = Math.min(2, gc * 0.999);
+    const ref = E.eprLinear(Math.min(0.85 * gc, 1.9), P.tau0).value;
+    const live = lastEst && !lastEst.settling && !lastEst.unstable ? lastEst.mean + 2 * lastEst.se : 0;
+    const mx = Math.max(1, P.F === "linear" ? ref * 1.25 : 0, live * 1.25, ...points.map((p) => p.m + 2 * p.se));
+    ymax = niceCeil(mx);
+    // grid + axes
+    const yt = ymax <= 1.5 ? 0.5 : ymax <= 4 ? 1 : ymax <= 10 ? 2 : 5;
+    for (let v = 0; v <= ymax + 1e-9; v += yt) {
+      el("line", { x1: M.l, x2: PW - M.r, y1: sy(v), y2: sy(v), stroke: v === 0 ? C.rule : C.rule2, "stroke-width": 1 }, layer.base);
+      el("text", { x: M.l - 6, y: sy(v) + 4, "text-anchor": "end", "font-size": 11, fill: C.ink3 }, layer.base).textContent = +v.toFixed(1);
+    }
+    [0, 0.5, 1, 1.5, 2].forEach((g) => {
+      el("text", { x: sx(g), y: PH - M.b + 16, "text-anchor": "middle", "font-size": 11, fill: C.ink3 }, layer.base).textContent = g;
+    });
+    el("text", { x: M.l + iw / 2, y: PH - 4, "text-anchor": "middle", "font-size": 12, fill: C.ink3 }, layer.base).textContent = "disorder strength g";
+    const ylab = el("text", { x: 4, y: M.t + 2, "font-size": 12, fill: C.ink3 }, layer.base); ylab.textContent = "ṡ";
+    ylab.setAttribute("font-family", "STIX Two Text, Times New Roman, serif"); ylab.setAttribute("font-style", "italic"); ylab.setAttribute("font-size", 15);
+    // unstable region
+    if (gc < 2 && P.F === "linear") {
+      el("rect", { x: sx(gc), y: M.t, width: sx(2) - sx(gc), height: ih, fill: "#EEF1F5" }, layer.base);
+      el("line", { x1: sx(gc), x2: sx(gc), y1: M.t, y2: M.t + ih, stroke: C.ink3, "stroke-width": 1 }, layer.base);
+      const lt = el("text", { x: sx(gc) + 6, y: M.t + 12, "font-size": 11, fill: C.ink3 }, layer.base);
+      lt.textContent = sx(2) - sx(gc) > 70 ? "linear network unstable" : "unstable";
+    }
+    // theory curve
+    let d = "";
+    const n = 160;
+    for (let k = 0; k <= n; k++) {
+      const g = (k / n) * gEnd;
+      const r = E.eprLinear(g, P.tau0);
+      if (!r.stable) break;
+      const v = Math.min(r.value, ymax * 3);
+      d += (k ? "L" : "M") + sx(g).toFixed(2) + "," + sy(v).toFixed(2);
+    }
+    el("path", { d, fill: "none", stroke: C.ink, "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round",
+      "clip-path": "url(#clip)", opacity: P.F === "linear" ? 1 : 0.3 }, layer.data);
+    if (P.F !== "linear") {
+      el("text", { x: M.l + 6, y: M.t + 12, "font-size": 11, fill: C.ink3 }, layer.data).textContent = "line: linear-F theory, for reference";
+    }
+    // committed points
+    points.forEach((p) => {
+      el("line", { x1: sx(p.g), x2: sx(p.g), y1: sy(p.m - 2 * p.se), y2: sy(p.m + 2 * p.se), stroke: C.ink3, "stroke-width": 1.5, "clip-path": "url(#clip)" }, layer.data);
+      el("circle", { cx: sx(p.g), cy: sy(Math.min(p.m, ymax * 1.02)), r: 4, fill: C.ink3, stroke: "#fff", "stroke-width": 2 }, layer.data);
+    });
+    // table
+    $("#tbl").innerHTML = points.slice().sort((a, b) => a.g - b.g).map((p) =>
+      `<tr><td>${p.g.toFixed(2)}</td><td>${p.m.toFixed(3)} ± ${p.se.toFixed(3)}</td><td>${p.th && p.th.stable ? p.th.value.toFixed(3) : "–"}</td></tr>`).join("") ||
+      `<tr><td colspan="3">No measurements yet. Let the simulation run, then move g.</td></tr>`;
+  }
+  function drawPlotLive(e) {
+    layer.live.innerHTML = "";
+    const x = sx(P.g);
+    el("line", { x1: x, x2: x, y1: M.t, y2: M.t + ih, stroke: C.rule, "stroke-width": 1 }, layer.live);
+    lastEst = e;
+    if (!e.settling && !e.unstable) {
+      if (e.mean + 2 * e.se > ymax) { drawPlot(); }
+      el("line", { x1: x, x2: x, y1: sy(Math.max(0, e.mean - 2 * e.se)), y2: sy(e.mean + 2 * e.se), stroke: C.ink, "stroke-width": 1.5, "clip-path": "url(#clip)" }, layer.live);
+      el("circle", { cx: x, cy: sy(Math.min(e.mean, ymax * 1.02)), r: 5, fill: C.ink, stroke: "#fff", "stroke-width": 2 }, layer.live);
+    }
+  }
+  // hover + click-to-set
+  const tip = $("#tip"), wrapEl = $("#plot-wrap");
+  function gFromEvent(ev) {
+    const r = svg.getBoundingClientRect();
+    const px = ((ev.clientX - r.left) / r.width) * PW;
+    return { g: Math.max(0, Math.min(2, ((px - M.l) / iw) * 2)), r, px };
+  }
+  svg.addEventListener("pointermove", (ev) => {
+    const { g, r, px } = gFromEvent(ev);
+    if (px < M.l - 4 || px > PW - M.r + 4) { tip.style.opacity = 0; layer.hover.innerHTML = ""; return; }
+    layer.hover.innerHTML = "";
+    el("line", { x1: sx(g), x2: sx(g), y1: M.t, y2: M.t + ih, stroke: C.ink3, "stroke-width": 1 }, layer.hover);
+    const th = E.eprLinear(g, P.tau0);
+    let html = `g = ${g.toFixed(2)}<br>theory ${th.stable ? th.value.toFixed(3) : "unstable"}`;
+    const near = points.find((p) => Math.abs(p.g - g) < 0.04);
+    if (near) html += `<br>measured ${near.m.toFixed(3)} ± ${near.se.toFixed(3)}`;
+    if (th.stable && th.value <= ymax) el("circle", { cx: sx(g), cy: sy(th.value), r: 4, fill: C.ink, stroke: "#fff", "stroke-width": 2 }, layer.hover);
+    tip.innerHTML = html + `<br><span style="opacity:.7">click to set g</span>`;
+    const wr = wrapEl.getBoundingClientRect();
+    tip.style.left = (ev.clientX - wr.left) + "px";
+    tip.style.top = (r.top - wr.top + (M.t / PH) * r.height + 4) + "px";
+    tip.style.opacity = 1;
+  });
+  svg.addEventListener("pointerleave", () => { tip.style.opacity = 0; layer.hover.innerHTML = ""; });
+  svg.addEventListener("click", (ev) => {
+    const { g, px } = gFromEvent(ev);
+    if (px < M.l - 4 || px > PW - M.r + 4) return;
+    apply({ g: Math.round(g * 100) / 100 }); syncSliders();
+  });
+
+  /* ---------- loop ---------- */
+  new ResizeObserver(sizePlot).observe(wrapEl);
+  new IntersectionObserver((ents) => { visible = ents[0].isIntersecting; }, { rootMargin: "100px" }).observe($(".figure"));
+  function frame() {
+    if (running && visible) {
+      const t0 = performance.now();
+      sim.step(stepsPerFrame);
+      const dtms = performance.now() - t0;
+      if (dtms > 10 && stepsPerFrame > 4) stepsPerFrame -= 2; else if (dtms < 6 && stepsPerFrame < 30) stepsPerFrame += 1;
+      pushTrace();
+      drawNet(); drawTrace();
+      updateReadout(false);
+    }
+    requestAnimationFrame(frame);
+  }
+  syncSliders(); syncPlay(); pointsKey = keyOf(); drawPlot(); updateReadout(true);
+  if (!running) { sim.step(300); pushTrace(); }
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
 </body>
 </html>
