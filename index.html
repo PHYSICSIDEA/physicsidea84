@@ -26,7 +26,7 @@
   --gutter: clamp(20px, 4vw, 40px);
 }
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
@@ -56,8 +56,8 @@ sub, sup { font-size: 0.7em; line-height: 0; }
   transition: border-color .2s;
 }
 .nav.scrolled { border-bottom-color: var(--rule); }
-.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 24px; }
-.nav .home { font-family: var(--serif); font-size: 21px; color: var(--ink); text-decoration: none; letter-spacing: -0.005em; }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; gap: 24px; }
+.nav .home { font-family: var(--serif); font-size: 30px; font-weight: 500; line-height: 1; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
 .nav ul { display: flex; gap: 4px; list-style: none; margin: 0; padding: 0; }
 .nav ul a {
   font-family: var(--sans); font-size: 15px; font-weight: 500; color: var(--ink-2);
@@ -82,7 +82,8 @@ sub, sup { font-size: 0.7em; line-height: 0; }
 .hero .pos span { color: var(--ink); font-weight: 600; }
 @media (max-width: 860px) { .hero .wrap { grid-template-columns: minmax(0, 1fr); gap: 20px; } .hero-art .cartoon { max-width: 320px; } }
 @media (max-width: 600px) {
-  .nav .wrap { height: 52px; }
+  .nav .wrap { height: 60px; }
+  .nav .home { font-size: 26px; }
   .hero { padding: 4px 0 32px; }
   .hero .wrap { gap: 6px; }
   .hero-art .cartoon { max-width: 300px; }
@@ -302,7 +303,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
     </div>
     <div class="hero-text">
       <h1>Adaptive information processing</h1>
-      <p class="lede">I’m a statistical physicist. I study complex adaptive systems whose interactions fluctuate, learn, or co-evolve with the states they connect, from neural and gene-regulatory networks to societies, and ask how adaptation, irreversibility and information shape what they can do.</p>
+      <p class="lede">I’m a statistical physicist. I study complex adaptive systems whose interactions fluctuate, learn, or co-evolve with the states they connect, from neural and gene-regulatory networks to societies, and ask how adaptation, irreversibility and information shape their collective performance.</p>
       <p class="pos"><span>Tuan Pham</span>, research fellow at the Dutch Institute for Emergent Phenomena, University of Amsterdam</p>
     </div>
   </div>
