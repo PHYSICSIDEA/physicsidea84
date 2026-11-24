@@ -267,6 +267,25 @@ section.block { padding: clamp(56px, 8vw, 96px) 0; border-top: 1px solid var(--r
 
 footer { border-top: 1px solid var(--rule); padding: 28px 0 40px; font-family: var(--sans); font-size: 14px; color: var(--ink-3); }
 footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+/* ---------- Fig. 2: noise as selection ---------- */
+#gnet { aspect-ratio: 1 / 1; max-width: 520px; margin: 0 auto; }
+#gtrace { height: 76px; }
+.phase-badge { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; font-size: 18px; color: var(--ink); }
+.phase-badge i { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.phase-note { font-size: 14px; color: var(--ink-2); margin: 4px 0 10px; min-height: 3em; line-height: 1.45; }
+.fig-plots { grid-column: 1 / -1; border-top: 1px solid var(--rule-2); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); font-family: var(--sans); }
+.fig-plots > div { padding: 18px 22px 16px; }
+.fig-plots > div + div { border-left: 1px solid var(--rule-2); }
+.fig-plots h3 { font-family: var(--sans); font-size: 15px; font-weight: 600; margin: 0 0 8px; letter-spacing: 0; }
+.plot-legend .swatch { width: 10px !important; height: 10px !important; border-radius: 2px; }
+.plot-legend .nm em { font-family: var(--serif); font-size: 15px; }
+#gmap, #gcurve { cursor: crosshair; touch-action: manipulation; }
+@media (max-width: 960px) {
+  .fig-plots { grid-template-columns: minmax(0, 1fr); }
+  .fig-plots > div + div { border-left: 0; border-top: 1px solid var(--rule-2); }
+}
+@media (max-width: 480px) { .fig-plots > div { padding-left: 14px; padding-right: 14px; } }
+
 /* ---------- phones (kept last so it overrides the rules above) ---------- */
 @media (max-width: 600px) {
   .model { padding-bottom: 48px; }
@@ -287,7 +306,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   <div class="wrap">
     <a class="home" href="#top">Tuan Pham</a>
     <ul>
-      <li><a href="#model">Model</a></li>
+      <li><a href="#model">Models</a></li>
       <li><a href="#research">Research</a></li>
       <li><a href="#publications">Publications</a></li>
       <li><a href="#notes">Notes</a></li>
@@ -407,6 +426,119 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <span class="ln"><i>ẋ</i><sub><i>i</i></sub> = −<i>x</i><sub><i>i</i></sub> + <i>F</i>(∑<sub><i>j</i>≠<i>i</i></sub> <i>J</i><sub><i>ij</i></sub>(<i>t</i>) <i>x</i><sub><i>j</i></sub>) + <i>ζ</i><sub><i>i</i></sub>(<i>t</i>), &nbsp;⟨<i>ζ</i><sub><i>i</i></sub><i>ζ</i><sub><i>j</i></sub>⟩ = 2<i>T</i> <i>δ</i><sub><i>ij</i></sub> <i>δ</i>(<i>t</i>−<i>t</i>′)</span>
           <span class="ln"><i>J</i><sub><i>ij</i></sub>(<i>t</i>) = <i>μ</i>/<i>N</i> + <i>g</i> <i>Z</i><sub><i>ij</i></sub>(<i>t</i>)/√<i>N</i>, &nbsp;<i>Ż</i><sub><i>ij</i></sub> = −<i>Z</i><sub><i>ij</i></sub>/<i>τ</i><sub>0</sub> + (√(1+2<i>τ</i><sub>0</sub>)/<i>τ</i><sub>0</sub>) <i>ξ</i><sub><i>ij</i></sub>(<i>t</i>)</span>
           <span class="ln"><i>ṡ</i> = (<i>NT</i>)<sup>−1</sup> ∑<sub><i>i</i></sub> [<i>F</i>(<i>h</i><sub><i>i</i></sub>) − <i>x</i><sub><i>i</i></sub>] ∘ <i>ẋ</i><sub><i>i</i></sub></span>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="block" id="selection" aria-labelledby="sel-h">
+  <div class="wrap">
+    <div class="model-head">
+      <h2 id="sel-h">Noise as selection</h2>
+      <p>From my 2024 paper with Kunihiko Kaneko. Gene-regulatory networks evolve under selection while gene expression is noisy. At low or high noise, evolution settles on fragile networks. At intermediate noise it selects reciprocal networks of coherent feedback loops, and the phenotype becomes robust.</p>
+    </div>
+
+    <figure class="figure" aria-labelledby="fig2cap">
+      <div class="stage">
+        <canvas id="gnet" role="img" aria-label="Animated gene-regulatory network: 24 target genes on an inner ring, coloured by expression, and non-target genes on an outer ring. Red links activate, blue links repress; the links are redrawn each generation."></canvas>
+        <canvas id="gtrace" aria-hidden="true"></canvas>
+        <div class="stage-bar">
+          <div class="keys">
+            <span class="key"><i style="background:var(--pos)"></i>activating</span>
+            <span class="key"><i style="background:var(--neg)"></i>repressing</span>
+            <span class="key"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="#fff" stroke="#172033" stroke-width="1.5"/></svg>non-target gene</span>
+          </div>
+          <div class="btns">
+            <button class="btn" id="gplay" type="button" aria-pressed="false">Pause</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="ctl">
+          <label for="gsig">Environmental noise <span><span class="var">σ</span> = <output id="gsig-o" for="gsig">0.40</output></span></label>
+          <input type="range" id="gsig" min="0" max="50" step="1" value="20">
+          <div class="ends"><span>quiet expression</span><span>noisy expression</span></div>
+        </div>
+        <div class="ctl">
+          <span class="lab" id="gmode-lab">Second parameter</span>
+          <div class="seg" role="group" aria-labelledby="gmode-lab" style="margin-top:6px">
+            <button type="button" data-gmode="tj" aria-pressed="true">Selection temperature</button>
+            <button type="button" data-gmode="alpha" aria-pressed="false">Non-target genes</button>
+          </div>
+        </div>
+        <div class="ctl" id="gtj-ctl">
+          <label for="gtj">Selection temperature <span><span class="var">T</span><sub>J</sub> = 1/<span class="var">β</span> = <output id="gtj-o" for="gtj">0.10</output></span></label>
+          <input type="range" id="gtj" min="0" max="50" step="1" value="50">
+          <div class="ends"><span>weak selection</span><span>strong selection</span></div>
+        </div>
+        <div class="ctl" id="galpha-ctl" hidden>
+          <label for="galpha">Non-target genes per target gene <span><span class="var">α</span> = <output id="galpha-o" for="galpha">0.50</output></span></label>
+          <input type="range" id="galpha" min="0" max="50" step="1" value="50">
+          <div class="ends"><span>none</span><span>one per two targets</span></div>
+        </div>
+        <div class="presets" role="group" aria-label="Presets">
+          <button class="btn" type="button" data-gpreset="low">Low noise</button>
+          <button class="btn" type="button" data-gpreset="mid">Intermediate noise</button>
+          <button class="btn" type="button" data-gpreset="high">High noise</button>
+          <button class="btn" type="button" data-gpreset="weak">Weak selection</button>
+        </div>
+        <div class="readout">
+          <h3>Evolved state</h3>
+          <div class="phase-badge"><i id="gphase-sw"></i><span id="gphase">Robust</span></div>
+          <p class="phase-note" id="gphase-note" role="status"></p>
+          <dl class="vals">
+            <dt>Target expression <i class="v">m</i><sub>∞</sub></dt><dd id="g-m">–</dd>
+            <dt>Target–non-target coupling <i class="v">λ</i></dt><dd id="g-lam">–</dd>
+            <dt>Target–target coupling <i class="v">μ</i></dt><dd id="g-mu">–</dd>
+            <dt>Largest eigenvalue <i class="v">Λ</i><sub>1</sub></dt><dd id="g-L1">–</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="fig-plots">
+        <div>
+          <h3>Phase diagram</h3>
+          <div class="plot-wrap" id="gmap-wrap">
+            <svg id="gmap" viewBox="0 0 400 270" role="img" aria-labelledby="gmap-t gmap-d">
+              <title id="gmap-t">Phase diagram of the evolved state</title>
+              <desc id="gmap-d">Robust, non-robust and para-attractor phases as a function of environmental noise and the second parameter. The marker shows the current choice; click to choose another point.</desc>
+            </svg>
+            <div class="tip" id="gmap-tip"></div>
+          </div>
+          <div class="plot-legend">
+            <span class="key"><i class="swatch" style="background:#C8274F"></i>robust</span>
+            <span class="key"><i class="swatch" style="background:#8C9AB5"></i>non-robust</span>
+            <span class="key"><i class="swatch" style="background:#DCE1E9"></i>para-attractor</span>
+            <span>Click to choose a point</span>
+          </div>
+        </div>
+        <div>
+          <h3 id="gcurve-h">Order parameters along the noise axis</h3>
+          <div class="plot-wrap" id="gcurve-wrap">
+            <svg id="gcurve" viewBox="0 0 400 270" role="img" aria-labelledby="gcurve-h gcurve-d">
+              <desc id="gcurve-d">Target expression, target–non-target coupling and target–target coupling as functions of noise for the current second parameter. The shaded band marks the robust window.</desc>
+            </svg>
+            <div class="tip" id="gcurve-tip"></div>
+          </div>
+          <div class="plot-legend">
+            <span class="key"><i style="background:#172033"></i><span class="nm"><em>m</em><sub>∞</sub></span></span>
+            <span class="key"><i style="background:#C8274F"></i><span class="nm"><em>λ</em></span></span>
+            <span class="key"><i style="background:#2250C8"></i><span class="nm"><em>μ</em></span></span>
+            <span>Shaded: robust window</span>
+          </div>
+        </div>
+      </div>
+
+      <figcaption id="fig2cap">
+        <div>
+          <b>Fig. 2.</b> Gene expression <i>x</i> changes fast and noisily; the regulatory network <i>J</i> evolves slowly under selection for the fitness <i>Ψ</i> of the target genes (inner ring). The outer ring holds the non-target genes, <i>α</i> per target gene. Each generation, couplings are redrawn from the evolved genotype statistics of the adaptive dynamical mean-field theory: target–target links activate with probability (1 + <i>μ</i>)/2, target–non-target links with probability (1 + <i>λ</i>)/2. Only a subset of links is drawn. Each target gene follows the theory’s effective expression dynamics. Phase diagram and curves: solutions from <a href="https://doi.org/10.1088/1742-5468/ad8223">Pham &amp; Kaneko (2024)</a> at <i>α</i> = 0.5 and <i>ν</i> = 1, or at <i>T</i><sub>J</sub> = 0.1 when <i>α</i> is varied.
+        </div>
+        <div class="eq" aria-label="Model equations">
+          <span class="ln">(∂<sub><i>t</i></sub> + 1) <i>x</i><sub><i>k</i></sub> = tanh(∑<sub><i>j</i></sub> <i>J</i><sub><i>kj</i></sub> <i>x</i><sub><i>j</i></sub>) + <i>ξ</i><sub><i>k</i></sub>, &nbsp;⟨<i>ξ</i><sub><i>k</i></sub><i>ξ</i><sub><i>j</i></sub>⟩ = <i>σ</i><sup>2</sup> <i>δ</i><sub><i>kj</i></sub> <i>δ</i>(<i>t</i>−<i>t</i>′)</span>
+          <span class="ln"><i>J</i><sub><i>kj</i></sub>(<i>τ</i>+1) = sign[<i>h</i><sub><i>kj</i></sub>(<i>τ</i>) + <i>β</i><sup>−1</sup> <i>ξ̃</i><sub><i>kj</i></sub>(<i>τ</i>)], &nbsp;<i>T</i><sub>J</sub> = <i>β</i><sup>−1</sup></span>
+          <span class="ln"><i>Ψ</i> = <i>N</i><sub>t</sub><sup>−2</sup> ∑<sub><i>k</i>≠<i>j</i>∈𝒯</sub> [<i>x</i><sub><i>k</i></sub><i>x</i><sub><i>j</i></sub>], &nbsp;<i>Λ</i><sub>1</sub> = (<i>λ</i><sup>4</sup> + <i>μ</i><sup>2</sup>)/<i>μ</i> − 2</span>
         </div>
       </figcaption>
     </figure>
@@ -799,7 +931,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       sum: "Exact equations for the spectral density of sparse networks with an arbitrary distribution of single edges and triangles per node." },
     { key: "pham2024dynamical", year: 2024, title: "Dynamical theory for adaptive systems",
       authors: ["Tuan Minh Pham", "Kunihiko Kaneko"], venue: "Journal of Statistical Mechanics: Theory and Experiment", vol: "2024", pages: "113501", doi: "10.1088/1742-5468/ad8223", arxiv: "2306.01403", dir: "adapt", feat: true,
-      sum: "A path-integral theory for systems with fast states and slowly adapting parameters, applied to gene-regulatory networks under a dynamic genotype–phenotype map: phenotypic robustness emerges at intermediate environmental noise." },
+      sum: "A path-integral theory for systems with fast states and slowly adapting parameters, applied to gene-regulatory networks under a dynamic genotype–phenotype map: phenotypic robustness emerges at intermediate environmental noise. The model in Fig. 2." },
     { key: "heiler2023criminal", year: 2023, title: "A large-scale empirical investigation of specialization in criminal career",
       authors: ["Georg Heiler", "Tuan Pham", "Jan Korbel", "Johannes Wachs", "Stefan Thurner"], venue: "Scientific Reports", vol: "13", pages: "17160", doi: "10.1038/s41598-023-43552-6", dir: "social",
       sum: "Six years of longitudinal data on criminal acts in a European country give a data-driven taxonomy of criminal specialization. Specialists work in smaller, more tightly knit collaboration networks than generalists." },
@@ -931,9 +1063,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
   const navLinks = $$(".nav ul a");
   const spy = new IntersectionObserver((ents) => {
-    ents.forEach((en) => { if (en.isIntersecting) navLinks.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + en.target.id))); });
+    ents.forEach((en) => { if (en.isIntersecting) { const id = en.target.id === "selection" ? "model" : en.target.id; navLinks.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + id))); } });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  ["model", "research", "publications", "notes", "about"].forEach((id) => spy.observe(document.getElementById(id)));
+  ["model", "selection", "research", "publications", "notes", "about"].forEach((id) => spy.observe(document.getElementById(id)));
 
   /* ================= simulation ================= */
   const E = window.EPRNet;
@@ -1292,6 +1424,347 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   resize();
   requestAnimationFrame(frame);
 })();
+</script>
+<script>
+/* Fig. 2 — Noise as selection (Pham & Kaneko, J. Stat. Mech. 2024, 113501).
+   Phase diagram and order parameters: the paper's fixed-point solutions (data behind its Figs. 1 and 2).
+   Network: couplings redrawn each generation with P(+) = (1+mu)/2 (target-target) and (1+lambda)/2
+   (target-non-target); each target gene follows the effective expression
+   x = tanh(mu m + alpha nu chi m + sqrt(alpha q) z~) + sigma z, with q = q0 + sigma^2 (nu = 1).      */
+(function () {
+  "use strict";
+  const DATA = {"sigma":[0.0,0.02,0.04,0.06,0.08,0.1,0.12,0.14,0.16,0.18,0.2,0.22,0.24,0.26,0.28,0.3,0.32,0.34,0.36,0.38,0.4,0.42,0.44,0.46,0.48,0.5,0.52,0.54,0.56,0.58,0.6,0.62,0.64,0.66,0.68,0.7,0.72,0.74,0.76,0.78,0.8,0.82,0.84,0.86,0.88,0.9,0.92,0.94,0.96,0.98,1.0],"betaDesc":[10.0,9.8,9.6,9.4,9.2,9.0,8.8,8.6,8.4,8.2,8.0,7.8,7.6,7.4,7.2,7.0,6.8,6.6,6.4,6.2,6.0,5.8,5.6,5.4,5.2,5.0,4.8,4.6,4.4,4.2,4.0,3.8,3.6,3.4,3.2,3.0,2.8,2.6,2.4,2.2,2.0,1.9,1.8,1.7,1.6,1.5,1.4,1.3,1.2,1.1,1.0],"alpha":[0.0,0.01,0.02,0.03,0.04,0.05,0.06,0.07,0.08,0.09,0.1,0.11,0.12,0.13,0.14,0.15,0.16,0.17,0.18,0.19,0.2,0.21,0.22,0.23,0.24,0.25,0.26,0.27,0.28,0.29,0.3,0.31,0.32,0.33,0.34,0.35,0.36,0.37,0.38,0.39,0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5],"fig1":{"m":{"hi":0.61545,"b64":"//////////////////////////////////////////7+/v39/Pv59/Ty8O3q5+Th3tzc//////////////////////////////////////////7+/v39/Pv59/Ty8O3q5+Th3tzc/////////////////////////////////////////v7+/v39/Pv59/Py7+3q5+Th3tzc/////////////////////////////////////v7+/v7+/f38/Pr59vPx7+zp5uPg3tzc/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/f38+/r49vLw7uzp5uPg3dzc/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v39/fz8+/n49fLw7evo5eLf3dvc/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v39/f39/f39/Pz7+vn39PHv7Orn5OHe3Nvc/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/fz8/Pv6+fj28/Dt6+jl4uDd29vc/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz7+/r5+Pf18u7s6ufk4d7c29vd/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pv7+/v7+vn59/b08e3q6OXi4N3b2tve+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v6+vr6+fj39vTy7+vp5uPh3tza2tvf+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+fn5+Pf29fPw7enn5OHf3NrZ2tzh+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Pj39/b18/Hv6+fk4t/d29nZ2t3j+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj39/f29fXz8u/t6eTi393b2djY2t4A9/f39/f39/f39/f39/f39/f39/f39/f39/f39/b29vX19PPy8O3q5uLf3dvZ2NfY2wAA9vb29vb29vb29vb29vb29vb29vb29vb29vb19fX19PTz8vHw7uvo5N/d29nX19fZ3eMA9fX19fX19fX19fX19fX19fX19fX19fX09PT09PTz8/Lx8O/t6+jl4dza2NfW1tfaAAAA8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8vLy8fDw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"},"lam":{"hi":0.98437,"b64":"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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7Oji2cmlWA8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4NbDmkkLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtHspBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},"mu":{"hi":1.0,"b64":"/////////////////////////////////////////v7+/f38+vj18uzp5eDb1M3FvLKn/////////////////////////////////////////v7+/f38+vj18uzp5eDb1M3FvLGm/////////////////////////////////////////v7+/fz7+vj18ezp5eDa1M3Eu7Gm/////////////////////////////////////////v7+/fz7+vj18ezo5N/a08zDurCl///////////////////////////////////////+/v7+/fz7+vj18evo497Z0svCua+k///////////////////////////////////////+/v7+/fz7+ff08Orn4t3Y0cnBuK6j///////////////////////////////////////+/v79/fz7+ff07+rm4dzWz8i/tqyh///////////////////////////////////////+/v79/fz6+fbz7+jk4NvVzsa9tKqf//////////////////////////////////////7+/v79/Pv6+Pby7ufj3tnTy8S7said//////////////////////////////////////7+/v39/Pv6+PXx7Obh3NfQycG4r6Wb/////////////////////////////////////v7+/v39/Pv59/Tw6+Tf2tTOxr61rKOZ/////////////////////////////////////v7+/v38+/r59vPv6eLd2NHLw7uyqaCX///////////////////////////////////+/v7+/f38+/r49fLt59/a1c7HwLevpp6V///////////////////////////////////+/v7+/fz8+vn39PHs5dzX0cvEvLSso5sA//////////////////////////////////7+/v79/fz7+vj28+/q4tnUzsfAuLCooAAA/////////////////////////////////v7+/v39/Pz6+ff18e3n39bQysO8tK2lnpcA///////////////////////////////+/v7+/v39/Pv6+Pbz7+vk3NLMxb+3sKmiAAAA//////////////////////////////7+/v7+/f38+/r59/Xx7ejh2M3HwbqzrKafAAAA//////////////////////////////7+/v79/fz8+/n49vPv6+Xd1MnDvLavqaMAAAAA///////////////////////////+/v7+/v39/Pz7+vj29PHt6OHZz8S+uLKspqAAAAAA//////////////////////////7+/v7+/f38/Pv6+ff18u/q5N3Uyr+5s66oowAAAAAA/////////////////////////v7+/v79/fz8+/r59/Xz8Ozn4NjPxbq1r6qlAAAAAAAA///////////////////////+/v7+/v39/Pz7+vn49vPx7ejj3NPKwLaxrKcAAAAAAAAA/////////////////////v7+/v7+/f38/Pv6+fj29PHu6uTe1s7Eu7KtqQAAAAAAAAAA///////////////////+/v7+/v39/fz8+/r5+Pb08u7q5uDZ0ci/t66qAAAAAAAAAAAA/////////////////v7+/v7+/f39/Pz7+vn49vTy7+vm4dvTy8O7swAAAAAAAAAAAAAA//////////////7+/v7+/v39/fz8+/v6+ff29PLv6+fi3NXNxr63sAAAAAAAAAAAAAAA///////////+/v7+/v7+/f39/Pz7+vn49/X08e7r5+Lc1s/IwbqzAAAAAAAAAAAAAAAA/////////v7+/v7+/v39/fz8+/v6+fj39fPx7uvn4tzW0MnDvLYAAAAAAAAAAAAAAAAA//////7+/v7+/v79/f38/Pz7+vn49/b08vDt6ubh3NbQysS+ubMAAAAAAAAAAAAAAAAA//7+/v7+/v7+/f39/Pz8+/r6+fj29fPx7+zp5eDb1tDLxcC7AAAAAAAAAAAAAAAAAAAA/v7+/v7+/v39/fz8/Pv6+vn49/b08vDu6+fj39rV0MvGwbwAAAAAAAAAAAAAAAAAAAAA/v7+/v39/f38/Pz7+vr5+Pf29PPx7+zp5uLe2dTQy8bCvgAAAAAAAAAAAAAAAAAAAAAA/v39/f38/Pz7+/r6+fj39vTz8e/t6ufk4NzX08/KxsIAAAAAAAAAAAAAAAAAAAAAAAAA/f39/Pz8+/v6+fn49/b08/Hv7evo5eHd2tbSzsrGwwAAAAAAAAAAAAAAAAAAAAAAAAAA/Pz8+/v6+vn49/b19PPx7+3r6OXi3tvX1NDNycYAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+/v6+vn4+Pf29fPy8O7s6ujl4t/c2NXSz8zJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA+vn4+Pf29fTy8e/t6+nn5OLf3NnW09DOywAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9/f29fTy8fDu7Oro5uPh3tzZ1tTRz80AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9PPy8e/u7Oro5uTi4N3b2dbU0tAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8O/t7Oro5uTi4N7c2tjW1NLhAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6+no5uTi4d/d29nY1tUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA5ePi4N/d3NrY19gAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA4N7d3NrZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},"q0":{"hi":0.45416,"b64":"/////////////////////////////////////////v7+/f38+vn28+7r6OTg29bSzsvL/////////////////////////////////////////v7+/f38+vn28u7r5+Tf29bSzsvL///////////////////////////////////////+/v7+/fz8+vj28u3r5+Pf29bSzsvL//////////////////////////////////////7+/v79/fz7+vj18u3q5+Pf2tbRzcvL//////////////////////////////////7+/v7+/v79/fz7+vj18ezp5uLe2dXRzcvL/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v39/Pz7+ff08ezp5eHd2dTQzcvM/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/f39/Pv6+ff08Ovo5ODc2NPPzMvN/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/f39/f38/Pv6+Pbz7+rm49/b1tLPzMvO/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/fz8+/r59/Xy7ujl4d3Z1dHOzMzP/f39/f39/f39/f39/f39/f39/f39/f39/f39/fz8/Pz7+vn49vTx7Ofj4NzY1NDNzM3R/f39/f39/f39/f39/f39/f39/f39/f38/Pz8/Pz8+/v6+vn39fPv6+Xi3trW0s/NzM7U/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pv7+/r6+fj29PHu6ePg3NjU0c7NzdDX/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8+/v7+/v7+/v6+vr5+Pf18/Ds5+Hd2tbT0M7NztPb+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v6+vr6+fn49/X08e7q5d/b2NTRz83O0NYf+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vn5+Pj39vTy8Ozo4tzZ1dLQzs7P0yMj+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr5+fn5+fj49/f29PPx7url4NrW09HPzs/R1t8n+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fj4+Pf39vX08/Hv7Ojj3dfU0tDPz9HUKysr+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pf39/b29fTz8e/t6eXg2tXS0M/P0NPYLy8v+Pj4+Pj4+Pj4+Pj4+Pj4+Pj39/f39/f39/b29vX19PPx7+3q5+Ld2NPR0NDQ09c0NDQ09/f39/f39/f39/f39/f39/f39/f29vb29vX19fTz8vHv7evo5N/a1dHQ0NHT1ts4ODg49vb29vb29vb29vb29vb29vb29vb19fX19fT08/Py8e/t6+jl4dzX09HQ0dPW2jw8PDw89fX19fX19fX19fX19fX19fX19fX09PT08/Pz8vHw7+3r6ebi3tnV0tHS09baQUFBQUFB9PT09PT09PT09PT09PT09PT09PTz8/Pz8vLx8O/u7evp5uPf29fT0dLU1tpFRUVFRUVF8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Ly8vLx8fDv7+3s6ujm49/c2NTS0tXX2klJSUlJSUlJ8/Pz8/Py8vLy8vLy8vLy8vLy8vHx8fDw7+/u7evq6Obj4NzZ1dPS1NjbTk5OTk5OTk5O8vLy8vLy8vHx8fHx8fHx8fHx8PDw7+/u7u3s6unn5eLg3NnW1NPU1lJSUlJSUlJSUlJS8fHx8fHx8PDw8PDw8PDw8O/v7+/u7u3s7Ovp6Obk4t/c2dbU09TW2lZWVlZWVlZWVlZW8PDw8PDv7+/v7+/v7+/v7u7u7u3t7Ovq6ujn5ePh39zZ19XU1NbZW1tbW1tbW1tbW1tb7+/v7+7u7u7u7u7u7u7t7e3s7Ovr6uno5+bk4uDe29nX1dTU1tlfX19fX19fX19fX19f7u7t7e3t7e3t7e3t7Ozs7Ovr6urp6Ofm5OPh393b2NbV1NXW2d1jY2NjY2NjY2NjY2Nj7Ozs7Ozs7Ozs7Ovr6+vq6unp6Ofn5uTj4uDe3NrY1tXV1dfZZ2dnZ2dnZ2dnZ2dnZ2dn6+vr6+vr6+vq6urq6eno6Ofn5uXk4+Lg3t3b2dfW1dXW19psbGxsbGxsbGxsbGxsbGxs6urq6urq6enp6ejo6Ofn5uXk4+Lh4N/d29rY19bV1tfY2nBwcHBwcHBwcHBwcHBwcHBw6enp6Ojo6Ojn5+fm5uXk5OPi4eDe3dva2dfW1tbW19l0dHR0dHR0dHR0dHR0dHR0dHR06Ofn5+fm5ubl5eTk4+Pi4eDf3t3b2tnY19bW1tfZ2nh4eHh4eHh4eHh4eHh4eHh4eHh45ubm5eXl5OTj4+Li4eDf3t3c29rZ2NfX1tfX2Np8fHx8fHx8fHx8fHx8fHx8fHx8fHx85OTk4+Pj4uLh4ODf3t3c29rZ2NjX19fX2NnagICAgICAgICAgICAgICAgICAgICAgICA4+Li4eHg4N/f3t3c29va2djY19fX19jZ2oSEhISEhISEhISEhISEhISEhISEhISEhISE4ODg397e3d3c29ra2djY2NfX2NjZ2duIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiI3t7d3dzb29ra2djY2NjY2NjZ2dqMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyM3Nvb2trZ2djY2NjY2NjZ2drskJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQ2tnZ2djY2NjY2NnZ2tuUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSUlJSU2NjY2NnZ2dna292Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eX2dnZ2trbm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ubm5ub25+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+foqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKipqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqampqamqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tra2tsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwsLCwtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0"},"h0":{"hi":0.8419,"b64":"/////////////////////////////////////////v7+/f38+vn28+7r6OXh3NjU0M7N/////////////////////////////////////////v7+/f38+vn28+7r6OTh3NjU0M7N///////////////////////////////////////+/v7+/fz8+vj28u7r6OTg3NjT0M7N//////////////////////////////////////7+/v79/fz7+vj28u3r5+Tg29fT0M3N/////////////////////////////////v7+/v7+/v79/fz7+vj18u3q5+Pf29bTz83O/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v39/Pz7+ff08ezp5uLe2tbSz83O/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v79/f39/Pv6+ff08Ovo5eHd2dXRzs3P/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v79/f39/f38+/v5+Pbz7+rn49/b19TQzs3P/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/Pz8+/r59/Xy7ujl4t7a1tLPzc7R/f39/f39/f39/f39/f39/f39/f39/f39/f39/Pz8/Pv7+vn49vTw7Ofj4NzY1NHOzc7S/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz7+/v6+fj39fLv6+Xi3trW09DOzc/U/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz7+/v7+vr5+Pf29PHt6ePf3NjV0c/NztHW+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/r6+vn49/b08u/r5+Dd2tbT0M7Nz9PT+/v7+/v7+/v7+/v7+/v7+vr6+vr6+vr6+vr6+vn5+fj39vXz8e3p5N7b19TRz83O0NUA+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr5+fn5+fn4+Pf29fPx7+vn4tvY1dLPzs3P0gAA+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Pj4+Pf39vb18/Lv7enk39jV0tDOzc7Q1dAA+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj49/f39/b29fTz8vDt6ubh3NbT0M7Nzc/TAAAA9/f39/f39/f39/f39/f39/f39/f39/f39vb29vX09PPx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"}},"fig2":{"m":{"hi":0.61545,"b64":"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"},"lam":{"hi":0.98439,"b64":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAQIEBgoPAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECBAcLERkjLjpHVGBsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAECBAcLEhsnAEJRYG58h5Kbo6qwtbq9AAAAAAAAAJ5WMx8UDQoICAgJCg0QFRwkLjpHVWNwfoqUnqeutLq/w8fEzc/R09XX2NrbAAAAAAAAAADc1MzEvbeyr66ur7Gztrq9wMTHyszP0dPV19na3N3e3+Dh4uPk5eHm5ufnAAAAAAAAAADw7ero5uTj4uHh4eHh4eLi4+Pk5OXm5ufn6Onp6urq6+vs7Ozt7e3u7u7uAAAAAAAAAAD39fTz8vHw7+/v7u7u7u7u7u7v7+/v7/Dw8PDw8fHx8fHy8vLy8vLz8/PzAAAAAAAAAAAA+fn49/f29vX19fX09PT09PT09PT09fX19fX19fX19fX29vb29vb29vb2AAAAAAAAAAAA/Pv7+vr5+fn5+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj5+fn5AAAAAAAAAAAAAP38/Pz8+/v7+vv7+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6+vr6AAAAAAAAAAAAAP7+/f39/f39/Pz8/Pz8/Pz8+/z8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8AAAAAAAAAAAAAP7+/v7+/v7+/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39/f39AAAAAAAAAAAAAAD////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v79/f39/f39AAAAAAAAAAAAAAD//////////////v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+AAAAAAAAAAAAAAAA///////////////////////////////////////+/v7+/v7+/v7+AAAAAAAAAAAAAAAA////////////////////////////////////////////////////AAAAAAAAAAAAAAAAAP//////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAD/////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAD+/v7/////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAA/v7+/v7+/v7/////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAP39/v7+/v7+/v7+/v7+/v7+/v7/////////////////////AAAAAAAAAAAAAAAAAAAAAAD9/f39/f39/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v//AAAAAAAAAAAAAAAAAAAAAAAA/Pz8/Pz9/f39/f39/f39/f7+/v7+/v7+/v7+/v7+/v7+AAAAAAAAAAAAAAAAAAAAAAAAAPn7+/v7/Pz8/Pz8/P39/f39/f39/f39/f39/f7+/v7+AAAAAAAAAAAAAAAAAAAAAAAAAAAA+fn6+vr6+/v7+/v7/Pz8/Pz8/Pz8/P39/f39/f39AAAAAAAAAAAAAAAAAAAAAAAAAAAAAFb3+Pj4+fn5+vr6+vr6+/v7+/v7+/z8/Pz8/Pz8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAtvT19vb39/f4+Pj5+fn5+fr6+vr6+vv7+/v7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7vHy8/T09fX29vb39/f4+Pj4+fn5+fr6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABc5uzu7/Dx8vLz9PT19fX29vf39/j4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAXyODm6evs7u/w8PHy8/P09PX1AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARbXT3eLl6Orr7e7v8PHyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAjiVwNHa3+Pm6OrsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAUzgrHI1NvgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEOSIy0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},"mu":{"hi":1.0,"b64":"////////////////////////////////////////////////////////////////////AAD/////////////////////////////////////////////////////////////////AAAA////////////////////////////////////////////////////////////////AAAAAP//////////////////////////////////////////////////////////////AAAAAAD/////////////////////////////////////////////////////////////AAAAAAAA////////////////////////////////////////////////////////////AAAAAAAA////////////////////////////////////////////////////////////AAAAAAAAAP//////////////////////////////////////////////////////////AAAAAAAAAP//////////////////////////////////////////////////////////AAAAAAAAAAD/////////////////////////////////////////////////////////AAAAAAAAAAD/////////////////////////////////////////////////////////AAAAAAAAAAD/////////////////////////////////////////////////////////AAAAAAAAAAAA////////////////////////////////////////////////////////AAAAAAAAAAAA////////////////////////////////////////////////////////AAAAAAAAAAAAAP//////////////////////////////////////////////////////AAAAAAAAAAAAAP//////////////////////////////////////////////////////AAAAAAAAAAAAAP//////////////////////////////////////////////////////AAAAAAAAAAAAAAD/////////////////////////////////////////////////////AAAAAAAAAAAAAAD/////////////////////////////////////////////////////AAAAAAAAAAAAAAAA////////////////////////////////////////////////////AAAAAAAAAAAAAAAA////////////////////////////////////////////////////AAAAAAAAAAAAAAAAAP//////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAD/////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAD/////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAA////////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAP//////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAD/////////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAA/v7/////////////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAP7+/v7+/v7+////////////////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAA/v7+/v7+/v7+/v7+/v7+/v//////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAP39/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/f39/f39/f7+/v7+/v7+/v7+/v7+/v7+/v7+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD8/Pz8/f39/f39/f39/f7+/v7+/v7+/v7+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPr7+/v8/Pz8/Pz9/f39/f39/f39/v7+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPn5+vr7+/v7/Pz8/Pz8/P39/f39AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA8Pf3+Pn5+vr6+/v7+/z8/Pz8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7/T19vf4+Pn5+vr6+/v7AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6/Hz9PX29/j4+fn6AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAALfc6u7x8/T19vf3AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC6xtnl6u7w8vP0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMbR3OPo7O7wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADH0Nje5OjrAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAANDW3OHlAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA1tvgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"},"q0":{"hi":0.45416,"b64":"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"},"h0":{"hi":0.8419,"b64":"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"}}};
+  if (!DATA) return;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const INK = "#172033", INK3 = "#667085", RULE = "#D8DEE7", RULE2 = "#E8ECF2";
+  const POS = [200, 39, 79], NEG = [34, 80, 200], MID = [185, 191, 202];
+  const SANS = getComputedStyle(document.documentElement).getPropertyValue("--sans");
+
+  /* ---------- data ---------- */
+  function dec(o) {
+    const bin = atob(o.b64), a = new Float32Array(bin.length);
+    for (let i = 0; i < bin.length; i++) a[i] = (bin.charCodeAt(i) / 255) * o.hi;
+    return a;
+  }
+  const G = {};
+  for (const tag of ["fig1", "fig2"]) {
+    G[tag] = {};
+    for (const f of ["m", "lam", "mu", "q0", "h0"]) G[tag][f] = dec(DATA[tag][f]);
+  }
+  const SIG = DATA.sigma, BETA = DATA.betaDesc, ALPHA = DATA.alpha, N = 51;
+  const st = { mode: "tj", si: 20, bi: 0, ai: 50 };          // bi: index into BETA (0 = beta 10)
+  const tagOf = () => (st.mode === "tj" ? "fig1" : "fig2");
+  const colOf = () => (st.mode === "tj" ? st.bi : st.ai);
+  const get = (f, si = st.si, c = colOf(), tag = tagOf()) => G[tag][f][si * N + c];
+  const alphaNow = () => (st.mode === "tj" ? 0.5 : ALPHA[st.ai]);
+  const phaseOf = (m, lam) => (m <= 0.01 ? "pa" : lam > 0.05 ? "robust" : "nonrobust");
+  const PH = {
+    robust: { name: "Robust", color: "#C8274F", rgb: [200, 39, 79],
+      note: "Selection keeps the target genes highly expressed and wires them to non-target genes through coherent, mostly activating feedback loops (λ close to 1)." },
+    nonrobust: { name: "Non-robust", color: "#8C9AB5", rgb: [140, 154, 181],
+      note: "Target genes are expressed (m∞ > 0), but their links to non-target genes stay random (λ = 0), so no feedback loops are selected." },
+    pa: { name: "Para-attractor", color: "#DCE1E9", rgb: [220, 225, 233],
+      note: "Noise dominates: average expression and both coupling averages vanish (m∞ = λ = μ = 0)." },
+  };
+  const lam1 = (lam, mu) => (mu > 1e-6 ? (lam ** 4 + mu * mu) / mu - 2 : -2);
+
+  /* ---------- network ---------- */
+  function rng(seed) { let s = seed >>> 0; return () => { s = (s + 0x6D2B79F5) >>> 0; let t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const R = rng(20240611);
+  const gauss = () => { let u = 0, v = 0; while (u === 0) u = R(); v = R(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  const NT = 24;
+  const tAng = Array.from({ length: NT }, (_, k) => (2 * Math.PI * k) / NT - Math.PI / 2);
+  // target-target chords: a fixed sparse set of pairs
+  const tt = [];
+  while (tt.length < 34) {
+    const a = Math.floor(R() * NT), b = Math.floor(R() * NT);
+    const d = Math.min((a - b + NT) % NT, (b - a + NT) % NT);
+    if (d < 3 || tt.some((p) => (p.a === a && p.b === b) || (p.a === b && p.b === a))) continue;
+    tt.push({ a, b, s: R() < 0.5 ? 1 : -1 });
+  }
+  let NO = 0, nt = [], to = [];
+  function rebuildNonTargets() {
+    const want = Math.round(alphaNow() * NT);
+    if (want === NO) return;
+    NO = want; nt = []; to = [];
+    for (let l = 0; l < NO; l++) {
+      const ang = (2 * Math.PI * (l + 0.5)) / Math.max(NO, 1) - Math.PI / 2;
+      nt.push(ang);
+      // link each non-target gene to the 5 target genes closest in angle
+      const order = tAng.map((a, k) => [Math.abs(Math.atan2(Math.sin(a - ang), Math.cos(a - ang))), k]).sort((x, y) => x[0] - y[0]);
+      for (let r = 0; r < 5; r++) to.push({ l, k: order[r][1], s: R() < 0.5 ? 1 : -1 });
+    }
+  }
+  const zt = Float64Array.from({ length: NT }, gauss);   // quenched input of each target gene
+  const zn = Float64Array.from({ length: NT }, gauss);   // expression noise (Ornstein-Uhlenbeck in display time)
+  const x = new Float64Array(NT);
+  let gen = 0;
+  function generation() {
+    const mu = get("mu"), lam = get("lam");
+    for (const e of tt) if (R() < 0.35) e.s = R() < (1 + mu) / 2 ? 1 : -1;
+    for (const e of to) if (R() < 0.35) e.s = R() < (1 + lam) / 2 ? 1 : -1;
+    for (let k = 0; k < NT; k++) zt[k] = 0.8 * zt[k] + 0.6 * gauss();
+    gen++;
+  }
+  function expression(dt) {
+    const s = SIG[st.si], a = alphaNow(), q = get("q0") + s * s, h0 = get("h0");
+    const c = Math.exp(-dt / 0.6), b = Math.sqrt(1 - c * c);
+    for (let k = 0; k < NT; k++) {
+      zn[k] = c * zn[k] + b * gauss();
+      x[k] = Math.tanh(h0 + Math.sqrt(a * q) * zt[k]) + s * zn[k];
+    }
+  }
+
+  const net = $("#gnet"), trc = $("#gtrace");
+  const nctx = net.getContext("2d"), tctx = trc.getContext("2d");
+  let S = 0, TW = 0, TH = 0, dpr = 1;
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    S = net.clientWidth; net.width = Math.round(S * dpr); net.height = Math.round(S * dpr);
+    TW = trc.clientWidth; TH = trc.clientHeight; trc.width = Math.round(TW * dpr); trc.height = Math.round(TH * dpr);
+    draw(); drawTrace();
+  }
+  const mix = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t, p[2] + (q[2] - p[2]) * t];
+  const divColor = (v) => { v = Math.max(-1, Math.min(1, v)); const c = v >= 0 ? mix(MID, POS, v) : mix(MID, NEG, -v); return `rgb(${c[0] | 0},${c[1] | 0},${c[2] | 0})`; };
+  function draw() {
+    if (!S) return;
+    const ctx = nctx; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, S, S);
+    const cx = S / 2, cy = S / 2 + 6, R1 = S * 0.27, R2 = S * 0.43;
+    const tp = (k) => [cx + R1 * Math.cos(tAng[k]), cy + R1 * Math.sin(tAng[k])];
+    const np = (l) => [cx + R2 * Math.cos(nt[l]), cy + R2 * Math.sin(nt[l])];
+    ctx.lineWidth = 1; ctx.strokeStyle = RULE2;
+    ctx.beginPath(); ctx.arc(cx, cy, R1, 0, 2 * Math.PI); ctx.stroke();
+    if (NO) { ctx.beginPath(); ctx.arc(cx, cy, R2, 0, 2 * Math.PI); ctx.stroke(); }
+    ctx.lineCap = "round";
+    for (const e of tt) {
+      const [x0, y0] = tp(e.a), [x1, y1] = tp(e.b);
+      const c = e.s > 0 ? POS : NEG;
+      ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},0.32)`; ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.quadraticCurveTo(cx + ((x0 + x1) / 2 - cx) * 0.55, cy + ((y0 + y1) / 2 - cy) * 0.55, x1, y1); ctx.stroke();
+    }
+    for (const e of to) {
+      const [x0, y0] = np(e.l), [x1, y1] = tp(e.k);
+      const c = e.s > 0 ? POS : NEG;
+      ctx.strokeStyle = `rgba(${c[0]},${c[1]},${c[2]},0.75)`; ctx.lineWidth = 1.8;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+    }
+    const rn = Math.max(4, S / 75), rt = Math.max(5, S / 58);
+    for (let l = 0; l < NO; l++) {
+      const [px, py] = np(l);
+      ctx.beginPath(); ctx.arc(px, py, rn, 0, 2 * Math.PI); ctx.fillStyle = "#fff"; ctx.fill();
+      ctx.lineWidth = 1.6; ctx.strokeStyle = INK; ctx.stroke();
+    }
+    ctx.lineWidth = 2; ctx.strokeStyle = "#fff";
+    for (let k = 0; k < NT; k++) {
+      const [px, py] = tp(k);
+      ctx.beginPath(); ctx.arc(px, py, rt, 0, 2 * Math.PI); ctx.fillStyle = divColor(x[k]); ctx.fill(); ctx.stroke();
+    }
+    ctx.fillStyle = INK3; ctx.font = `13px ${SANS}`; ctx.textBaseline = "top";
+    ctx.fillText(`Generation ${gen}`, 2, 2);
+    if (!NO) { ctx.textAlign = "center"; ctx.fillText("no non-target genes at α = 0", cx, cy + R2 - 8); ctx.textAlign = "left"; }
+  }
+
+  // trace of the mean target expression (display time, last 24 s)
+  const TL = 1400, tv = new Float32Array(TL), tt_ = new Float64Array(TL);
+  let th = 0, tn = 0, clock = 0;
+  function pushTrace() { let s = 0; for (let k = 0; k < NT; k++) s += x[k]; tv[th] = s / NT; tt_[th] = clock; th = (th + 1) % TL; tn = Math.min(TL, tn + 1); }
+  function drawTrace() {
+    if (!TW) return;
+    const ctx = tctx; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, TW, TH);
+    const top = 20, ymin = -1, ymax = 1.2, yOf = (v) => top + (1 - (v - ymin) / (ymax - ymin)) * (TH - top - 2);
+    ctx.fillStyle = INK3; ctx.font = `13px ${SANS}`; ctx.textBaseline = "alphabetic";
+    ctx.fillText(TW > 420 ? "Mean expression of the target genes; dashed: m∞ from the theory" : "Mean target expression; dashed: theory", 0, 13);
+    ctx.strokeStyle = RULE2; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, yOf(0)); ctx.lineTo(TW, yOf(0)); ctx.stroke();
+    ctx.setLineDash([4, 4]); ctx.strokeStyle = INK3; ctx.beginPath(); ctx.moveTo(0, yOf(get("m"))); ctx.lineTo(TW, yOf(get("m"))); ctx.stroke(); ctx.setLineDash([]);
+    if (tn < 2) return;
+    const now = tt_[(th - 1 + TL) % TL], span = 24;
+    ctx.strokeStyle = INK; ctx.lineWidth = 1.5; ctx.lineJoin = "round"; ctx.beginPath();
+    let started = false;
+    for (let i = 0; i < tn; i++) {
+      const idx = (th - tn + i + TL) % TL, age = now - tt_[idx];
+      if (age > span) continue;
+      const px = TW - (age / span) * TW, py = yOf(tv[idx]);
+      started ? ctx.lineTo(px, py) : ctx.moveTo(px, py); started = true;
+    }
+    ctx.stroke();
+  }
+
+  /* ---------- controls ---------- */
+  const sigEl = $("#gsig"), tjEl = $("#gtj"), alEl = $("#galpha");
+  function syncControls() {
+    sigEl.value = st.si; tjEl.value = 50 - st.bi; alEl.value = st.ai;
+    $("#gsig-o").textContent = SIG[st.si].toFixed(2);
+    $("#gtj-o").textContent = (1 / BETA[st.bi]).toFixed(BETA[st.bi] >= 4 ? 3 : 2).replace(/0$/, "");
+    $("#galpha-o").textContent = ALPHA[st.ai].toFixed(2);
+    $$("[data-gmode]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.gmode === st.mode)));
+    $("#gtj-ctl").hidden = st.mode !== "tj"; $("#galpha-ctl").hidden = st.mode !== "alpha";
+  }
+  function readout() {
+    const m = get("m"), lam = get("lam"), mu = get("mu"), ph = PH[phaseOf(m, lam)];
+    $("#gphase").textContent = ph.name; $("#gphase-sw").style.background = ph.color;
+    $("#gphase-note").textContent = ph.note;
+    $("#g-m").textContent = m.toFixed(3); $("#g-lam").textContent = lam.toFixed(3);
+    $("#g-mu").textContent = mu.toFixed(3); $("#g-L1").textContent = lam1(lam, mu).toFixed(2);
+  }
+  function changed(full) {
+    rebuildNonTargets(); syncControls(); readout(); drawMarker(); drawCurves(); if (full) drawMap();
+    if (!running) { expression(0.05); draw(); drawTrace(); }
+  }
+  sigEl.addEventListener("input", () => { st.si = +sigEl.value; changed(false); });
+  tjEl.addEventListener("input", () => { st.bi = 50 - +tjEl.value; changed(false); });
+  alEl.addEventListener("input", () => { st.ai = +alEl.value; changed(false); });
+  $$("[data-gmode]").forEach((b) => b.addEventListener("click", () => { st.mode = b.dataset.gmode; changed(true); }));
+  const PRESETS = { low: { si: 2 }, mid: { si: 20 }, high: { si: 47 }, weak: { mode: "tj", bi: 40, si: 20 } };
+  $$("[data-gpreset]").forEach((b) => b.addEventListener("click", () => {
+    const p = PRESETS[b.dataset.gpreset];
+    if (b.dataset.gpreset !== "weak") { if (st.mode === "tj") st.bi = 0; else st.ai = 50; }
+    const wasMode = st.mode; Object.assign(st, p); changed(st.mode !== wasMode);
+  }));
+  let running = !reduceMotion, visible = true;
+  const playBtn = $("#gplay");
+  const syncPlay = () => { playBtn.textContent = running ? "Pause" : "Play"; playBtn.setAttribute("aria-pressed", String(!running)); };
+  playBtn.addEventListener("click", () => { running = !running; syncPlay(); });
+
+  /* ---------- plots ---------- */
+  const NS = "http://www.w3.org/2000/svg";
+  const sublabel = (node, base, sub, tail) => { node.textContent = base; const t = document.createElementNS(NS, "tspan"); t.setAttribute("font-size", "0.75em"); t.setAttribute("dy", "0.3em"); t.textContent = sub; node.appendChild(t); if (tail) { const r = document.createElementNS(NS, "tspan"); r.setAttribute("dy", "-0.3em"); r.textContent = tail; node.appendChild(r); } };
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+  let W = 400; const H = 270, M = { l: 48, r: 10, t: 10, b: 40 }; let iw = W - M.l - M.r; const ih = H - M.t - M.b;
+  // phase map: x = sigma index, y = column index (top = 50)
+  const map = $("#gmap");
+  const mBase = el("g", {}, map), mMark = el("g", {}, map), mHover = el("g", {}, map);
+  const cellX = (i) => M.l + ((i + 0.5) / N) * iw, cellY = (j) => M.t + ((50 - j + 0.5) / N) * ih;
+  const pcan = document.createElement("canvas"); pcan.width = N; pcan.height = N;
+  function drawMap() {
+    mBase.innerHTML = "";
+    const pc = pcan.getContext("2d"), img = pc.createImageData(N, N), tag = tagOf();
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const c = PH[phaseOf(G[tag].m[i * N + j], G[tag].lam[i * N + j])].rgb, p = 4 * ((50 - j) * N + i);
+      img.data[p] = c[0]; img.data[p + 1] = c[1]; img.data[p + 2] = c[2]; img.data[p + 3] = 255;
+    }
+    pc.putImageData(img, 0, 0);
+    el("image", { href: pcan.toDataURL(), x: M.l, y: M.t, width: iw, height: ih, preserveAspectRatio: "none", style: "image-rendering: pixelated" }, mBase);
+    for (const v of [0, 0.2, 0.4, 0.6, 0.8, 1]) {
+      const px = cellX(Math.round(v * 50));
+      el("line", { x1: px, x2: px, y1: M.t + ih, y2: M.t + ih + 4, stroke: INK3 }, mBase);
+      el("text", { x: px, y: M.t + ih + 16, "text-anchor": "middle", "font-size": 11, fill: INK3 }, mBase).textContent = v;
+    }
+    const ticks = st.mode === "tj" ? [[0, "0.1"], [10, "0.125"], [20, "0.167"], [30, "0.25"], [40, "0.5"], [50, "1"]] : [[0, "0"], [10, "0.1"], [20, "0.2"], [30, "0.3"], [40, "0.4"], [50, "0.5"]];
+    for (const [j, lab] of ticks) {
+      el("line", { x1: M.l - 4, x2: M.l, y1: cellY(j), y2: cellY(j), stroke: INK3 }, mBase);
+      el("text", { x: M.l - 7, y: cellY(j) + 4, "text-anchor": "end", "font-size": 11, fill: INK3 }, mBase).textContent = lab;
+    }
+    el("text", { x: M.l + iw / 2, y: H - 4, "text-anchor": "middle", "font-size": 12, fill: INK3 }, mBase).textContent = "environmental noise σ";
+    const yl = el("text", { x: 12, y: M.t + ih / 2, "text-anchor": "middle", "font-size": 12, fill: INK3, transform: `rotate(-90 12 ${M.t + ih / 2})` }, mBase);
+    if (st.mode === "tj") sublabel(yl, "selection temperature T", "J"); else yl.textContent = "non-target genes per target, α";
+    const lbl = (txt, i, j, color) => el("text", { x: cellX(i), y: cellY(j), "text-anchor": "middle", "font-size": 12, "font-weight": 600, fill: color }, mBase).textContent = txt;
+    if (st.mode === "tj") { lbl("Robust", 23, 4, "#fff"); lbl("Non-robust", 15, 34, "#fff"); lbl("Para-attractor", 40, 44, INK3); }
+    else { lbl("Robust", 26, 40, "#fff"); lbl("Para-attractor", 38, 8, INK3); }
+  }
+  function drawMarker() {
+    mMark.innerHTML = "";
+    const px = cellX(st.si), py = cellY(colOf());
+    el("line", { x1: px, x2: px, y1: M.t, y2: M.t + ih, stroke: INK, "stroke-width": 1, opacity: 0.35 }, mMark);
+    el("line", { x1: M.l, x2: M.l + iw, y1: py, y2: py, stroke: INK, "stroke-width": 1, opacity: 0.35 }, mMark);
+    el("circle", { cx: px, cy: py, r: 6, fill: INK, stroke: "#fff", "stroke-width": 2.5 }, mMark);
+  }
+  const fmtCol = (j) => (st.mode === "tj" ? `T<sub>J</sub> = ${(1 / BETA[j]).toFixed(3)}` : `α = ${ALPHA[j].toFixed(2)}`);
+  function hitMap(ev) {
+    const r = map.getBoundingClientRect(), px = ((ev.clientX - r.left) / r.width) * W, py = ((ev.clientY - r.top) / r.height) * H;
+    if (px < M.l || px > M.l + iw || py < M.t || py > M.t + ih) return null;
+    return { i: Math.min(50, Math.max(0, Math.floor(((px - M.l) / iw) * N))), j: Math.min(50, Math.max(0, 50 - Math.floor(((py - M.t) / ih) * N))) };
+  }
+  const mapTip = $("#gmap-tip");
+  map.addEventListener("pointermove", (ev) => {
+    const h = hitMap(ev); mHover.innerHTML = "";
+    if (!h) { mapTip.style.opacity = 0; return; }
+    const tag = tagOf(), ph = PH[phaseOf(G[tag].m[h.i * N + h.j], G[tag].lam[h.i * N + h.j])];
+    el("rect", { x: cellX(h.i) - iw / N / 2, y: cellY(h.j) - ih / N / 2, width: iw / N, height: ih / N, fill: "none", stroke: INK, "stroke-width": 1.5 }, mHover);
+    mapTip.innerHTML = `σ = ${SIG[h.i].toFixed(2)}, ${fmtCol(h.j)}<br>${ph.name}<br><span style="opacity:.7">click to choose</span>`;
+    const wr = $("#gmap-wrap").getBoundingClientRect();
+    mapTip.style.left = ev.clientX - wr.left + "px"; mapTip.style.top = ev.clientY - wr.top - 10 + "px"; mapTip.style.opacity = 1;
+  });
+  map.addEventListener("pointerleave", () => { mapTip.style.opacity = 0; mHover.innerHTML = ""; });
+  map.addEventListener("click", (ev) => { const h = hitMap(ev); if (!h) return; st.si = h.i; if (st.mode === "tj") st.bi = h.j; else st.ai = h.j; changed(false); });
+
+  // order parameters along sigma
+  const cur = $("#gcurve");
+  const cBase = el("g", {}, cur), cLive = el("g", {}, cur), cHover = el("g", {}, cur);
+  const sx = (s) => M.l + s * iw, sy = (v) => M.t + ih - (v / 1.05) * ih;
+  const SER = [["m", INK, "m∞"], ["lam", "#C8274F", "λ"], ["mu", "#2250C8", "μ"]];
+  function drawCurves() {
+    cBase.innerHTML = ""; cLive.innerHTML = "";
+    const c = colOf();
+    // robust window
+    let i0 = -1;
+    for (let i = 0; i <= N; i++) {
+      const rob = i < N && phaseOf(get("m", i, c), get("lam", i, c)) === "robust";
+      if (rob && i0 < 0) i0 = i;
+      if (!rob && i0 >= 0) {
+        const a = sx(Math.max(0, SIG[i0] - 0.01)), b = sx(Math.min(1, SIG[i - 1] + 0.01));
+        el("rect", { x: a, y: M.t, width: b - a, height: ih, fill: "#F7E3E8" }, cBase); i0 = -1;
+      }
+    }
+    for (let v = 0; v <= 1.0001; v += 0.25) {
+      el("line", { x1: M.l, x2: M.l + iw, y1: sy(v), y2: sy(v), stroke: v === 0 ? RULE : RULE2 }, cBase);
+      el("text", { x: M.l - 7, y: sy(v) + 4, "text-anchor": "end", "font-size": 11, fill: INK3 }, cBase).textContent = v;
+    }
+    for (const v of [0, 0.2, 0.4, 0.6, 0.8, 1]) el("text", { x: sx(v), y: M.t + ih + 16, "text-anchor": "middle", "font-size": 11, fill: INK3 }, cBase).textContent = v;
+    el("text", { x: M.l + iw / 2, y: H - 4, "text-anchor": "middle", "font-size": 12, fill: INK3 }, cBase).textContent = "environmental noise σ";
+    for (const [f, color] of SER) {
+      let d = "";
+      for (let i = 0; i < N; i++) d += (i ? "L" : "M") + sx(SIG[i]).toFixed(1) + "," + sy(get(f, i, c)).toFixed(1);
+      el("path", { d, fill: "none", stroke: color, "stroke-width": 2, "stroke-linejoin": "round" }, cBase);
+    }
+    const x0 = sx(SIG[st.si]);
+    el("line", { x1: x0, x2: x0, y1: M.t, y2: M.t + ih, stroke: INK, opacity: 0.35 }, cLive);
+    for (const [f, color] of SER) el("circle", { cx: x0, cy: sy(get(f)), r: 4.5, fill: color, stroke: "#fff", "stroke-width": 2 }, cLive);
+    $("#gcurve-h").innerHTML = `Order parameters along the noise axis, at ${fmtCol(colOf())}`;
+  }
+  const curTip = $("#gcurve-tip");
+  const sigAt = (ev) => { const r = cur.getBoundingClientRect(), px = ((ev.clientX - r.left) / r.width) * W; return px < M.l - 4 || px > M.l + iw + 4 ? -1 : Math.max(0, Math.min(50, Math.round(((px - M.l) / iw) * 50))); };
+  cur.addEventListener("pointermove", (ev) => {
+    const i = sigAt(ev); cHover.innerHTML = "";
+    if (i < 0) { curTip.style.opacity = 0; return; }
+    el("line", { x1: sx(SIG[i]), x2: sx(SIG[i]), y1: M.t, y2: M.t + ih, stroke: INK3 }, cHover);
+    curTip.innerHTML = `σ = ${SIG[i].toFixed(2)}<br>m∞ = ${get("m", i).toFixed(3)}<br>λ = ${get("lam", i).toFixed(3)}<br>μ = ${get("mu", i).toFixed(3)}<br><span style="opacity:.7">click to set σ</span>`;
+    const wr = $("#gcurve-wrap").getBoundingClientRect();
+    curTip.style.left = ev.clientX - wr.left + "px"; curTip.style.top = ev.clientY - wr.top - 10 + "px"; curTip.style.opacity = 1;
+  });
+  cur.addEventListener("pointerleave", () => { curTip.style.opacity = 0; cHover.innerHTML = ""; });
+  cur.addEventListener("click", (ev) => { const i = sigAt(ev); if (i >= 0) { st.si = i; changed(false); } });
+
+  function sizePlots() {
+    const w = Math.round($("#gmap-wrap").getBoundingClientRect().width) || 400;
+    if (Math.abs(w - W) < 2) return;
+    W = Math.max(300, w); iw = W - M.l - M.r;
+    map.setAttribute("viewBox", `0 0 ${W} ${H}`); cur.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    drawMap(); drawMarker(); drawCurves();
+  }
+  new ResizeObserver(sizePlots).observe($("#gmap-wrap"));
+
+  /* ---------- loop ---------- */
+  new ResizeObserver(resize).observe(net);
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; }, { rootMargin: "100px" }).observe(net);
+  let last = 0, genT = 0;
+  function frame(ts) {
+    const dt = last ? Math.min(0.1, (ts - last) / 1000) : 1 / 60; last = ts;
+    if (running && visible) {
+      clock += dt; genT += dt;
+      if (genT >= 0.9) { genT = 0; generation(); }
+      expression(dt); pushTrace(); draw(); drawTrace();
+    }
+    requestAnimationFrame(frame);
+  }
+  rebuildNonTargets();
+  for (let g = 0; g < 12; g++) generation();
+  gen = 0; expression(0.05);
+  syncControls(); syncPlay(); readout(); drawMap(); drawMarker(); drawCurves(); resize();
+  requestAnimationFrame(frame);
+})();
+
 </script>
 </body>
 </html>
