@@ -286,6 +286,8 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
 }
 @media (max-width: 480px) { .fig-plots > div { padding-left: 14px; padding-right: 14px; } }
 
+/* ---------- Fig. 3: too connected to fail ---------- */
+#jknet { aspect-ratio: 1 / 1; max-width: 520px; margin: 0 auto; }
 /* ---------- phones (kept last so it overrides the rules above) ---------- */
 @media (max-width: 600px) {
   .model { padding-bottom: 48px; }
@@ -539,6 +541,111 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
           <span class="ln">(∂<sub><i>t</i></sub> + 1) <i>x</i><sub><i>k</i></sub> = tanh(∑<sub><i>j</i></sub> <i>J</i><sub><i>kj</i></sub> <i>x</i><sub><i>j</i></sub>) + <i>ξ</i><sub><i>k</i></sub>, &nbsp;⟨<i>ξ</i><sub><i>k</i></sub><i>ξ</i><sub><i>j</i></sub>⟩ = <i>σ</i><sup>2</sup> <i>δ</i><sub><i>kj</i></sub> <i>δ</i>(<i>t</i>−<i>t</i>′)</span>
           <span class="ln"><i>J</i><sub><i>kj</i></sub>(<i>τ</i>+1) = sign[<i>h</i><sub><i>kj</i></sub>(<i>τ</i>) + <i>β</i><sup>−1</sup> <i>ξ̃</i><sub><i>kj</i></sub>(<i>τ</i>)], &nbsp;<i>T</i><sub>J</sub> = <i>β</i><sup>−1</sup></span>
           <span class="ln"><i>Ψ</i> = <i>N</i><sub>t</sub><sup>−2</sup> ∑<sub><i>k</i>≠<i>j</i>∈𝒯</sub> [<i>x</i><sub><i>k</i></sub><i>x</i><sub><i>j</i></sub>], &nbsp;<i>Λ</i><sub>1</sub> = (<i>λ</i><sup>4</sup> + <i>μ</i><sup>2</sup>)/<i>μ</i> − 2</span>
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="block" id="collapse" aria-labelledby="jk-h">
+  <div class="wrap">
+    <div class="model-head">
+      <h2 id="jk-h">Too connected to fail</h2>
+      <p>From my 2020 paper with Leonhard Horstmeyer, Jan Korbel and Stefan Thurner. In the Jain–Krishna model, species survive by catalysing one another. Autocatalytic cycles keep the network alive, and it collapses when the last cycle breaks. That last cycle can be detected from the abundances alone: they snap to integer multiples of the smallest one.</p>
+    </div>
+
+    <figure class="figure" aria-labelledby="fig3cap">
+      <div class="stage">
+        <canvas id="jknet" role="img" aria-label="Animated catalytic network of species. Red nodes and links form autocatalytic cycles; hollow nodes are species with zero abundance. When the abundances are quantized, numbers on the nodes show each abundance in units of the smallest one."></canvas>
+        <div class="stage-bar">
+          <div class="keys">
+            <span class="key"><i style="background:var(--pos);height:3px"></i>cycle</span>
+            <span class="key"><i style="background:#B9BFCA"></i>catalytic link</span>
+            <span class="key"><svg width="12" height="12" aria-hidden="true"><circle cx="6" cy="6" r="4.5" fill="#fff" stroke="#8C9AB5" stroke-width="1.5"/></svg>extinct species</span>
+          </div>
+          <div class="btns">
+            <div class="seg" role="group" aria-label="Simulation speed" id="jkspeed">
+              <button type="button" data-jkspeed="1" aria-pressed="true">1×</button>
+              <button type="button" data-jkspeed="10" aria-pressed="false">10×</button>
+              <button type="button" data-jkspeed="50" aria-pressed="false">50×</button>
+            </div>
+            <button class="btn" id="jkplay" type="button" aria-pressed="false">Pause</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="ctl">
+          <label for="jkm">Links per new species <span><span class="var">m</span> = <output id="jkm-o" for="jkm">0.30</output></span></label>
+          <input type="range" id="jkm" min="0.1" max="0.6" step="0.05" value="0.3">
+          <div class="ends"><span>sparse</span><span>dense</span></div>
+        </div>
+        <div class="ctl">
+          <span class="lab" id="jkN-lab">Number of species</span>
+          <div class="seg" role="group" aria-labelledby="jkN-lab" style="margin-top:6px">
+            <button type="button" data-jkn="20" aria-pressed="false">20</button>
+            <button type="button" data-jkn="30" aria-pressed="true">30</button>
+            <button type="button" data-jkn="40" aria-pressed="false">40</button>
+          </div>
+        </div>
+        <div class="row">
+          <button class="btn" id="jkskip" type="button">Skip to the next warning</button>
+          <button class="btn" id="jkreset" type="button">New network</button>
+        </div>
+        <div class="readout">
+          <h3>State of the ecosystem</h3>
+          <div class="phase-badge"><i id="jkst-sw"></i><span id="jkst">Growing</span></div>
+          <p class="phase-note" id="jkst-note" role="status"></p>
+          <dl class="vals">
+            <dt>Step</dt><dd id="jk-t">0</dd>
+            <dt>Species alive</dt><dd id="jk-S">–</dd>
+            <dt>Perron–Frobenius eigenvalue <i class="v">λ</i><sub>1</sub></dt><dd id="jk-l1">–</dd>
+            <dt>Species on cycles</dt><dd id="jk-core">–</dd>
+          </dl>
+          <p class="status" id="jk-log"></p>
+        </div>
+      </div>
+
+      <div class="fig-plots">
+        <div>
+          <h3>Diversity and eigenvalue over time</h3>
+          <div class="plot-wrap" id="jkts-wrap">
+            <svg id="jkts" viewBox="0 0 400 280" role="img" aria-labelledby="jkts-t jkts-d">
+              <title id="jkts-t">Fraction of species alive and the Perron–Frobenius eigenvalue over the last steps</title>
+              <desc id="jkts-d">Top: fraction of species with non-zero abundance. Bottom: largest eigenvalue of the catalytic network. Red bands mark the warning phase, when the network is full and its abundances are quantized; dark lines mark collapses.</desc>
+            </svg>
+            <div class="tip" id="jkts-tip"></div>
+          </div>
+          <div class="plot-legend">
+            <span class="key"><i class="swatch" style="background:#F2D4DC"></i>warning: quantized, network full</span>
+            <span class="key"><i style="background:#172033;width:2px;height:12px"></i>collapse</span>
+          </div>
+        </div>
+        <div>
+          <h3>Abundances in units of the smallest</h3>
+          <div class="plot-wrap" id="jkh-wrap">
+            <svg id="jkh" viewBox="0 0 400 280" role="img" aria-labelledby="jkh-t jkh-d">
+              <title id="jkh-t">Abundance of each living species divided by the smallest one</title>
+              <desc id="jkh-d">One dot per living species on a logarithmic axis with a gridline at every whole number. When one cycle is left the dots sit exactly on whole numbers: each abundance is the smallest one times the number of paths from the cycle.</desc>
+            </svg>
+            <div class="tip" id="jkh-tip"></div>
+          </div>
+          <div class="plot-legend">
+            <span class="key"><i class="swatch" style="background:#C8274F;border-radius:50%"></i>species on a cycle</span>
+            <span class="key"><i class="swatch" style="background:#2250C8;border-radius:50%"></i>other living species</span>
+          </div>
+        </div>
+      </div>
+
+      <figcaption id="fig3cap">
+        <div>
+          <b>Fig. 3.</b> Each step, the least abundant species is removed and replaced by a new one that links to and from every other species with probability <i>m</i>/(<i>N</i> − 1). Populations grow through their catalysts, and the relative abundances <i>x</i><sub><i>i</i></sub> settle on the Perron–Frobenius eigenvector of the network. Red marks the species on cycles. With a single cycle left, every abundance is a whole multiple of the smallest, <i>x</i><sub><i>i</i></sub> = <i>n</i><sub><i>i</i></sub> <i>x</i><sub>min</sub>, where <i>n</i><sub><i>i</i></sub> counts the directed paths from the cycle to <i>i</i> (numbers on the nodes). This quantization is the early warning of <a href="https://doi.org/10.1038/s41598-020-57751-y">Horstmeyer, Pham, Korbel &amp; Thurner (2020)</a>: it needs only the node states, not the network. Once the network is full (at least <i>N</i> − 1 species alive), each replacement removes a species on the cycle with probability about <i>m</i>/e, so the collapse follows after about e/<i>m</i> steps.
+        </div>
+        <div class="eq" aria-label="Model equations">
+          <span class="ln"><i>dX</i><sub><i>i</i></sub>/<i>dt</i> = ∑<sub><i>j</i></sub> <i>M</i><sub><i>ij</i></sub> <i>X</i><sub><i>j</i></sub> − <i>Φ X</i><sub><i>i</i></sub>, &nbsp;<i>M</i><sub><i>ij</i></sub> ∈ {0, 1}</span>
+          <span class="ln"><i>x</i><sub><i>i</i></sub> = <i>X</i><sub><i>i</i></sub> / ∑<sub><i>j</i></sub> <i>X</i><sub><i>j</i></sub> → <i>λ</i><sub>1</sub> <i>x</i><sub><i>i</i></sub> = ∑<sub><i>j</i></sub> <i>M</i><sub><i>ij</i></sub> <i>x</i><sub><i>j</i></sub></span>
+          <span class="ln">one cycle left ⇒ <i>λ</i><sub>1</sub> = 1, &nbsp;<i>x</i><sub><i>i</i></sub> = <i>n</i><sub><i>i</i></sub> <i>x</i><sub>min</sub></span>
+          <span class="ln">⟨<i>T</i>⟩ = e/<i>m</i> &nbsp;steps from warning to collapse</span>
         </div>
       </figcaption>
     </figure>
@@ -952,7 +1059,7 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
       sum: "A critical level of interconnectedness above which a society fragments into internally cohesive, mutually hostile groups, rooted in a spin-glass phase transition." },
     { key: "horstmeyer2020predicting", year: 2020, title: "Predicting collapse of adaptive networked systems without knowing the network",
       authors: ["Leonhard Horstmeyer", "Tuan Minh Pham", "Jan Korbel", "Stefan Thurner"], venue: "Scientific Reports", vol: "10", pages: "1223", doi: "10.1038/s41598-020-57751-y", dir: "net",
-      sum: "An early-warning signal for the collapse of networked systems with linear or linearized dynamics, such as the loss of their last autocatalytic cycle, computed without detailed knowledge of the network." },
+      sum: "An early-warning signal for the collapse of networked systems with linear or linearized dynamics, such as the loss of their last autocatalytic cycle, computed without detailed knowledge of the network. The model in Fig. 3." },
     { key: "ramadiah2020network", year: 2020, title: "Network sensitivity of systemic risk",
       authors: ["Amanah Ramadiah", "Domenico Di Gangi", "D. Ruggiero Lo Sardo", "Valentina Macchiati", "Tuan Pham Minh", "Francesco Pinotti", "Mateusz Wilinski", "Paolo Barucca", "Giulio Cimini"], venue: "Journal of Network Theory in Finance", vol: "5", issue: "3", pages: "53–72", doi: "10.21314/JNTF.2019.056", arxiv: "1805.04325", dir: "net",
       sum: "How shock propagation in financial networks depends on topology, using reconstructed networks consistent with balance-sheet data. Systemic risk turns out to be extremely sensitive to network features." },
@@ -1063,9 +1170,9 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
   const navLinks = $$(".nav ul a");
   const spy = new IntersectionObserver((ents) => {
-    ents.forEach((en) => { if (en.isIntersecting) { const id = en.target.id === "selection" ? "model" : en.target.id; navLinks.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + id))); } });
+    ents.forEach((en) => { if (en.isIntersecting) { const id = en.target.id === "selection" || en.target.id === "collapse" ? "model" : en.target.id; navLinks.forEach((a) => a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + id))); } });
   }, { rootMargin: "-45% 0px -50% 0px" });
-  ["model", "selection", "research", "publications", "notes", "about"].forEach((id) => spy.observe(document.getElementById(id)));
+  ["model", "selection", "collapse", "research", "publications", "notes", "about"].forEach((id) => spy.observe(document.getElementById(id)));
 
   /* ================= simulation ================= */
   const E = window.EPRNet;
@@ -1762,6 +1869,513 @@ footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wr
   for (let g = 0; g < 12; g++) generation();
   gen = 0; expression(0.05);
   syncControls(); syncPlay(); readout(); drawMap(); drawMarker(); drawCurves(); resize();
+  requestAnimationFrame(frame);
+})();
+
+</script>
+<script>
+/* Jain–Krishna model with the eigenvector-quantization warning of
+   Horstmeyer, Pham, Korbel & Thurner, Sci. Rep. 10, 1223 (2020).
+   M[i*N + j] = 1 means j catalyses i (a link j -> i). Fast dynamics dX/dt = M X - Phi X:
+   the relative abundances x = X / sum X converge to the Perron–Frobenius attractor.
+   Slow dynamics: the least abundant species is removed and replaced by a new one that links
+   in and out with probability m/(N-1) each.                                                      */
+(function (root) {
+  "use strict";
+
+  function makeRng(seed) {
+    let s = seed >>> 0 || 1;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0; let t = s;
+      t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  // strongly connected components (Tarjan); returns comp id per node and the list of components
+  function scc(N, M) {
+    let index = 0; const idx = new Int32Array(N).fill(-1), low = new Int32Array(N), on = new Uint8Array(N);
+    const stack = [], comp = new Int32Array(N).fill(-1), comps = [];
+    function strong(v) {
+      idx[v] = low[v] = index++; stack.push(v); on[v] = 1;
+      for (let w = 0; w < N; w++) {            // edges v -> w exist when M[w][v] = 1
+        if (!M[w * N + v]) continue;
+        if (idx[w] < 0) { strong(w); low[v] = Math.min(low[v], low[w]); }
+        else if (on[w]) low[v] = Math.min(low[v], idx[w]);
+      }
+      if (low[v] === idx[v]) {
+        const c = []; let w;
+        do { w = stack.pop(); on[w] = 0; comp[w] = comps.length; c.push(w); } while (w !== v);
+        comps.push(c);
+      }
+    }
+    for (let v = 0; v < N; v++) if (idx[v] < 0) strong(v);
+    return { comp, comps };
+  }
+
+  function createJK(opts) {
+    const N = opts.N || 40;
+    let m = opts.m == null ? 0.25 : opts.m;
+    const rnd = makeRng(opts.seed || 7), tieLowest = opts.tie === "lowest";
+    const M = new Uint8Array(N * N);
+    const x = new Float64Array(N), xq = new Float64Array(N), alive = new Uint8Array(N);
+    let t = 0, lambda1 = 0, core = new Uint8Array(N), nCoreComps = 0, quant = false, nOfPaths = new Int32Array(N);
+    let warnSince = -1, hadCycles = false, crit = false;
+    const events = [];               // { t, type: "collapse", lead }
+    const p = () => m / (N - 1);
+
+    function linkNew(k) {
+      for (let j = 0; j < N; j++) { M[k * N + j] = 0; M[j * N + k] = 0; }
+      for (let j = 0; j < N; j++) {
+        if (j === k) continue;
+        if (rnd() < p()) M[k * N + j] = 1;      // j -> k
+        if (rnd() < p()) M[j * N + k] = 1;      // k -> j
+      }
+    }
+
+    // attractor of the linear dynamics, started from the current state
+    function attractor() {
+      const { comp, comps } = scc(N, M);
+      core.fill(0); nCoreComps = 0;
+      for (const c of comps) if (c.length > 1) { nCoreComps++; for (const v of c) core[v] = 1; }
+      if (nCoreComps === 0) {
+        // no cycles: only the ends of the longest chains keep a positive share; they get equal
+        // weights, as in find_pop() of the original R code
+        lambda1 = 0;
+        const L = new Int32Array(N), cnt = new Float64Array(N).fill(1);
+        // topological order by repeated relaxation (graph is a DAG)
+        const order = [], indeg = new Int32Array(N);
+        for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) if (M[i * N + j]) indeg[i]++;
+        const q = []; for (let i = 0; i < N; i++) if (!indeg[i]) q.push(i);
+        while (q.length) { const v = q.shift(); order.push(v); for (let w = 0; w < N; w++) if (M[w * N + v] && --indeg[w] === 0) q.push(w); }
+        for (const v of order) for (let w = 0; w < N; w++) if (M[w * N + v]) {
+          if (L[v] + 1 > L[w]) { L[w] = L[v] + 1; cnt[w] = cnt[v]; } else if (L[v] + 1 === L[w]) cnt[w] += cnt[v];
+        }
+        let Lmax = 0; for (let i = 0; i < N; i++) Lmax = Math.max(Lmax, L[i]);
+        let s = 0; for (let i = 0; i < N; i++) { x[i] = L[i] === Lmax ? 1 : 0; s += x[i]; }
+        for (let i = 0; i < N; i++) x[i] /= s;
+      } else {
+        // Each core (strongly connected part with a cycle) has its own Perron–Frobenius eigenvalue.
+        // Only the dominant cores survive; if a dominant core feeds another one, the downstream one
+        // wins (its population gains an extra factor t), so keep the most downstream dominant cores
+        // and everything reachable from them. The rest has zero relative abundance in the limit.
+        const cores = comps.filter((c) => c.length > 1), lam = cores.map((c) => coreLambda(c));
+        lambda1 = Math.round(Math.max(...lam) * 1e7) / 1e7;   // as rounded in the R code
+        const dom = cores.map((c, k) => (Math.round(lam[k] * 1e7) / 1e7 === lambda1 ? k : -1)).filter((k) => k >= 0);
+        const reachFrom = (nodes) => {
+          const seen = new Uint8Array(N), q = nodes.slice(); for (const v of q) seen[v] = 1;
+          while (q.length) { const v = q.pop(); for (let w = 0; w < N; w++) if (M[w * N + v] && !seen[w]) { seen[w] = 1; q.push(w); } }
+          return seen;
+        };
+        const reach = dom.map((k) => reachFrom(cores[k]));
+        const depth = new Map();
+        const dep = (a) => {                      // longest chain of dominant cores ending at a
+          if (depth.has(a)) return depth.get(a);
+          let d = 1;
+          dom.forEach((b, ib) => { if (b !== a && reach[ib][cores[a][0]]) d = Math.max(d, 1 + dep(b)); });
+          depth.set(a, d); return d;
+        };
+        let dmax = 0; for (const k of dom) dmax = Math.max(dmax, dep(k));
+        const topCores = dom.filter((k) => dep(k) === dmax);
+        // One Perron–Frobenius vector per top core (the core plus everything downstream of it).
+        // As in DACS_from_simple() of the R code, each is normalised to sum 1 and weighted by the
+        // number of species it covers; entries are rounded to 7 digits of the unit-norm vector.
+        x.fill(0); xq.fill(0);
+        for (const k of topCores) {
+          const R = reachFrom(cores[k]);
+          let v = new Float64Array(N), w = new Float64Array(N), s = 0, size = 0;
+          for (let i = 0; i < N; i++) if (R[i]) { v[i] = 1; s++; size++; }
+          for (let i = 0; i < N; i++) v[i] /= s;
+          for (let it = 0; it < 8000; it++) {
+            let tot = 0;
+            for (let i = 0; i < N; i++) { if (!R[i]) { w[i] = 0; continue; } let a = v[i]; const r = i * N; for (let j = 0; j < N; j++) if (M[r + j]) a += v[j]; w[i] = a; tot += a; }
+            let diff = 0; for (let i = 0; i < N; i++) { const nv = w[i] / tot; diff += Math.abs(nv - v[i]); w[i] = nv; }
+            [v, w] = [w, v];
+            if (diff < 1e-15 && it > 50) break;
+          }
+          let n2 = 0; for (let i = 0; i < N; i++) n2 += v[i] * v[i]; n2 = Math.sqrt(n2);
+          let sr = 0; const vr = new Float64Array(N);
+          for (let i = 0; i < N; i++) { vr[i] = Math.round((v[i] / n2) * 1e7) / 1e7; sr += vr[i]; }
+          for (let i = 0; i < N; i++) { x[i] += size * vr[i] / sr; xq[i] += size * v[i]; }
+        }
+        let sx = 0, sq = 0; for (let i = 0; i < N; i++) { sx += x[i]; sq += xq[i]; }
+        for (let i = 0; i < N; i++) { x[i] /= sx; xq[i] /= sq; }
+      }
+      // quantization test, on the node states only: every positive state is a whole multiple of the smallest
+      if (nCoreComps === 0) xq.set(x);
+      for (let i = 0; i < N; i++) alive[i] = x[i] > 0 ? 1 : 0;
+      let xmin = Infinity; for (let i = 0; i < N; i++) if (alive[i]) xmin = Math.min(xmin, xq[i]);
+      quant = lambda1 > 0;
+      for (let i = 0; i < N; i++) {
+        if (!alive[i]) { nOfPaths[i] = 0; continue; }
+        const r = xq[i] / xmin;
+        if (r > 1e5 || Math.abs(r - Math.round(r)) > 1e-6) { quant = false; break; }
+        nOfPaths[i] = Math.round(r);
+      }
+      if (!quant) nOfPaths.fill(0);
+    }
+
+    function coreLambda(c) {
+      // Perron–Frobenius eigenvalue of one strongly connected part (power iteration on I + A)
+      const L = c.length; let v = new Float64Array(L).fill(1 / L), w = new Float64Array(L), g = 2;
+      for (let it = 0; it < 4000; it++) {
+        let tot = 0;
+        for (let a = 0; a < L; a++) { let s_ = v[a]; const r = c[a] * N; for (let b = 0; b < L; b++) if (M[r + c[b]]) s_ += v[b]; w[a] = s_; tot += s_; }
+        let diff = 0; for (let a = 0; a < L; a++) { const nv = w[a] / tot; diff += Math.abs(nv - v[a]); w[a] = nv; }
+        [v, w] = [w, v]; g = tot;
+        if (diff < 1e-14 && it > 20) break;
+      }
+      return g - 1;
+    }
+
+    function step() {
+      // remove one of the least abundant species
+      let mn = Infinity; for (let i = 0; i < N; i++) mn = Math.min(mn, x[i]);
+      const cand = []; for (let i = 0; i < N; i++) if (x[i] <= mn * (1 + 1e-12)) cand.push(i);
+      const k = tieLowest ? cand[0] : cand[Math.floor(rnd() * cand.length)];   // R: sample() among ties; evolve_with_siz_and_lambda takes order(pop)[1]
+      linkNew(k);
+      x[k] = 0;
+      attractor();
+      t++;
+      const cyc = nCoreComps > 0;
+      // the warning of the paper: quantized abundances in a (nearly) fully populated network,
+      // as in enter_cycle of the R code (rho >= N - 1). The clock for the time to collapse starts here.
+      let S = 0; for (let i = 0; i < N; i++) S += alive[i];
+      crit = quant && S >= N - 1;
+      if (crit && warnSince < 0) warnSince = t;
+      if (!crit && cyc) warnSince = -1;
+      if (hadCycles && !cyc) { events.push({ t, type: "collapse", lead: warnSince >= 0 ? t - warnSince : null }); if (events.length > 500) events.shift(); warnSince = -1; }
+      hadCycles = cyc;
+      return k;
+    }
+
+    function reset() {
+      M.fill(0);
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) if (i !== j && rnd() < p()) M[i * N + j] = 1;
+      x.fill(1 / N); t = 0; warnSince = -1; crit = false; events.length = 0;
+      attractor(); hadCycles = nCoreComps > 0;
+    }
+    reset();
+
+    return {
+      N, M, x, step, reset, events,
+      get t() { return t; }, get m() { return m; }, set m(v) { m = v; },
+      get lambda1() { return lambda1; }, get core() { return core; }, get nCoreComps() { return nCoreComps; },
+      get quantized() { return quant; }, get critical() { return crit; }, get paths() { return nOfPaths; }, get warnSince() { return warnSince; },
+      diversity() { let s = 0; for (let i = 0; i < N; i++) s += alive[i]; return s; },
+      alive,
+      links() { let s = 0; for (let i = 0; i < N * N; i++) s += M[i]; return s; },
+    };
+  }
+
+  const api = { createJK };
+  if (typeof module !== "undefined" && module.exports) module.exports = api; else root.JKModel = api;
+})(typeof self !== "undefined" ? self : this);
+
+/* Fig. 3 — Too connected to fail: Jain–Krishna model with the quantization warning. */
+(function () {
+  "use strict";
+  const JK = window.JKModel; if (!JK) return;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const INK = "#172033", INK2 = "#4A556C", INK3 = "#667085", RULE = "#D8DEE7", RULE2 = "#E8ECF2";
+  const RED = "#C8274F", BLUE = "#2250C8", SLATE = "#8C9AB5", GREYLINK = "#B9BFCA";
+  const SANS = getComputedStyle(document.documentElement).getPropertyValue("--sans");
+
+  let N = 30, m = 0.3, mixedM = false, seed = 101, jk, pos, vel, hist, flash = -1, lastRemoved = -1, removedAge = 99;
+  const HL = 800;  // steps kept in the time series
+  function build() {
+    jk = JK.createJK({ N, m, seed: seed++ });
+    pos = Array.from({ length: N }, (_, i) => { const a = (2 * Math.PI * i) / N; return [0.5 + 0.36 * Math.cos(a), 0.5 + 0.36 * Math.sin(a)]; });
+    vel = Array.from({ length: N }, () => [0, 0]);
+    hist = []; flash = -1; lastRemoved = -1; mixedM = false;
+    record();
+  }
+  function record() {
+    hist.push({ t: jk.t, rho: jk.diversity() / N, l1: jk.lambda1, q: jk.critical, c: jk.events.length && jk.events[jk.events.length - 1].t === jk.t });
+    if (hist.length > HL) hist.shift();
+  }
+  function doStep() {
+    const before = jk.events.length;
+    lastRemoved = jk.step(); removedAge = 0;
+    if (jk.events.length > before) flash = 1.6;
+    record();
+    // newly linked species start near a random partner, or near the centre
+    const i = lastRemoved;
+    let partner = -1; for (let j = 0; j < N; j++) if (jk.M[i * N + j] || jk.M[j * N + i]) { partner = j; break; }
+    const base = partner >= 0 ? pos[partner] : [0.5, 0.5];
+    pos[i] = [base[0] + (Math.random() - 0.5) * 0.1, base[1] + (Math.random() - 0.5) * 0.1]; vel[i] = [0, 0];
+  }
+
+  /* ---------- force layout ---------- */
+  function layout(iter) {
+    const M = jk.M;
+    for (let it = 0; it < iter; it++) {
+      const f = Array.from({ length: N }, () => [0, 0]);
+      for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+        let dx = pos[i][0] - pos[j][0], dy = pos[i][1] - pos[j][1]; const d2 = dx * dx + dy * dy + 1e-4, d = Math.sqrt(d2);
+        const r = 6e-5 / d2; dx /= d; dy /= d;
+        f[i][0] += r * dx; f[i][1] += r * dy; f[j][0] -= r * dx; f[j][1] -= r * dy;
+        if (M[i * N + j] || M[j * N + i]) {
+          const s_ = 0.05 * (d - 0.11);
+          f[i][0] -= s_ * dx; f[i][1] -= s_ * dy; f[j][0] += s_ * dx; f[j][1] += s_ * dy;
+        }
+      }
+      for (let i = 0; i < N; i++) {
+        f[i][0] += 0.018 * (0.5 - pos[i][0]); f[i][1] += 0.018 * (0.5 - pos[i][1]);
+        vel[i][0] = 0.8 * (vel[i][0] + f[i][0]); vel[i][1] = 0.8 * (vel[i][1] + f[i][1]);
+        const sp = Math.hypot(vel[i][0], vel[i][1]); if (sp > 0.015) { vel[i][0] *= 0.015 / sp; vel[i][1] *= 0.015 / sp; }
+        let px = pos[i][0] + vel[i][0] - 0.5, py = pos[i][1] + vel[i][1] - 0.5; const R_ = Math.hypot(px, py);
+        if (R_ > 0.45) { px *= 0.45 / R_; py *= 0.45 / R_; }
+        pos[i][0] = 0.5 + px; pos[i][1] = 0.5 + py;
+      }
+    }
+  }
+
+  /* ---------- network drawing ---------- */
+  const cv = $("#jknet"), ctx = cv.getContext("2d");
+  let S = 0, dpr = 1;
+  function resize() { dpr = Math.min(window.devicePixelRatio || 1, 2); S = cv.clientWidth; cv.width = Math.round(S * dpr); cv.height = Math.round(S * dpr); draw(); }
+  function arrow(x0, y0, x1, y1, r, color, w) {
+    const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy); if (L < 1) return;
+    const ux = dx / L, uy = dy / L, ex = x1 - ux * (r + 1.5), ey = y1 - uy * (r + 1.5), sx = x0 + ux * r, sy = y0 + uy * r;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex - ux * 5, ey - uy * 5); ctx.stroke();
+    const h = 4 + w; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex - ux * h * 1.6 - uy * h * 0.8, ey - uy * h * 1.6 + ux * h * 0.8); ctx.lineTo(ex - ux * h * 1.6 + uy * h * 0.8, ey - uy * h * 1.6 - ux * h * 0.8); ctx.closePath(); ctx.fill();
+  }
+  function draw() {
+    if (!S || !jk) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, S, S);
+    const M = jk.M, x = jk.x, core = jk.core, q = jk.quantized, paths = jk.paths;
+    let xmax = 0; for (let i = 0; i < N; i++) xmax = Math.max(xmax, x[i]);
+    const P = (i) => [pos[i][0] * S, pos[i][1] * S], r = Math.max(7.5, S / 50);
+    // links j -> i
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      if (!M[i * N + j]) continue;
+      const onCycle = core[i] && core[j];
+      if (onCycle) continue;
+      const [x0, y0] = P(j), [x1, y1] = P(i);
+      arrow(x0, y0, x1, y1, r, GREYLINK, 1.2);
+    }
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      if (!M[i * N + j] || !(core[i] && core[j])) continue;
+      const [x0, y0] = P(j), [x1, y1] = P(i);
+      arrow(x0, y0, x1, y1, r, jk.alive[i] ? RED : "rgba(200,39,79,0.4)", 2.4);   // a cycle without population is paler
+    }
+    // nodes
+    for (let i = 0; i < N; i++) {
+      const [px, py] = P(i), alive = jk.alive[i] === 1;
+      ctx.beginPath(); ctx.arc(px, py, r, 0, 2 * Math.PI);
+      if (!alive) { ctx.fillStyle = "#fff"; ctx.fill(); ctx.lineWidth = 1.6; ctx.strokeStyle = core[i] ? "rgba(200,39,79,0.55)" : SLATE; ctx.stroke(); }
+      else {
+        const a = 0.45 + 0.55 * Math.sqrt(x[i] / xmax);
+        ctx.fillStyle = core[i] ? RED : `rgba(34,80,200,${a.toFixed(3)})`; ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = "#fff"; ctx.stroke();
+      }
+      if (q && alive) {
+        ctx.fillStyle = "#fff"; ctx.font = `600 ${Math.round(r * 1.15)}px ${SANS}`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.fillText(String(paths[i]), px, py + 0.5);
+      }
+    }
+    if (lastRemoved >= 0 && removedAge < 8) {
+      const [px, py] = P(lastRemoved);
+      ctx.beginPath(); ctx.arc(px, py, r + 4 + removedAge, 0, 2 * Math.PI);
+      ctx.strokeStyle = `rgba(23,32,51,${(0.5 * (1 - removedAge / 8)).toFixed(3)})`; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+    ctx.textAlign = "left"; ctx.textBaseline = "top"; ctx.fillStyle = INK3; ctx.font = `13px ${SANS}`;
+    ctx.fillText(`Step ${jk.t}`, 2, 2);
+    if (flash > 0) {
+      ctx.globalAlpha = Math.min(1, flash);
+      const txt = "Collapse: the last cycle is gone", fs = Math.max(13, Math.round(S / 34));
+      ctx.font = `600 ${fs}px ${SANS}`; const tw = ctx.measureText(txt).width, bw = tw + 2 * fs, bh = fs * 2.1, bx = (S - bw) / 2, by = 6;
+      ctx.fillStyle = INK; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, bh / 2); ctx.fill();
+      ctx.fillStyle = "#fff"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(txt, S / 2, by + bh / 2 + 0.5);
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  /* ---------- readout ---------- */
+  const STATES = {
+    none: { name: "No cycles", color: "#DCE1E9", note: () => "Without a cycle nothing sustains itself: abundance drains to the ends of the longest chains." },
+    grow: { name: "Growing around one cycle", color: "#E9A9B9", note: () => "The abundances are already whole multiples of the smallest one, but extinct species are still the ones being replaced, so the cycle is safe for now." },
+    one: { name: "Warning: one cycle carries everything", color: RED,
+      note: () => `The network is full and every abundance is a whole multiple of the smallest one. From now on each replacement can hit the cycle; the paper estimates the collapse about e/m ≈ ${(Math.E / m).toFixed(0)} steps later.` },
+    many: { name: "Several cycles", color: "#8C9AB5", note: () => "Interlocking cycles support each other, so losing one species on a cycle is not fatal." },
+  };
+  function readout() {
+    const st = jk.nCoreComps === 0 ? "none" : jk.critical ? "one" : jk.quantized ? "grow" : "many", s = STATES[st];
+    $("#jkst").textContent = s.name; $("#jkst-sw").style.background = s.color; $("#jkst-note").textContent = s.note();
+    $("#jk-t").textContent = jk.t;
+    $("#jk-S").innerHTML = `${jk.diversity()} <small>of ${N}</small>`;
+    $("#jk-l1").textContent = jk.lambda1.toFixed(3);
+    let c = 0; for (let i = 0; i < N; i++) c += jk.core[i]; $("#jk-core").textContent = c;
+    const col = jk.events.filter((e) => e.type === "collapse"), log = $("#jk-log");
+    if (pausedAtWarning) log.textContent = `Paused at step ${jk.t}, where the warning starts. Press Play to watch what happens next.`;
+    else if (!col.length) log.textContent = "No collapse yet. Try “Skip to the next warning”.";
+    else {
+      const warned = col.filter((e) => e.lead != null), last = col[col.length - 1];
+      const mean = warned.reduce((a, e) => a + e.lead, 0) / Math.max(1, warned.length);
+      let txt = `Collapses so far: ${col.length}` + (warned.length === col.length ? ", each one after the warning." : `, ${warned.length} of them after the warning.`);
+      if (last.lead != null) txt += ` The last came ${last.lead} step${last.lead === 1 ? "" : "s"} after it.`;
+      if (warned.length > 1) txt += ` On average ${mean.toFixed(1)} steps, against e/m = ${(Math.E / m).toFixed(1)}` + (mixedM ? " (m was changed during the run)." : ".");
+      log.textContent = txt;
+    }
+  }
+
+  /* ---------- plots ---------- */
+  const NS = "http://www.w3.org/2000/svg";
+  const el = (tag, attrs, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); parent.appendChild(n); return n; };
+  let W = 400; const H = 280, Mg = { l: 40, r: 10, t: 22, b: 38 };
+  const ts = $("#jkts"), tsG = el("g", {}, ts), tsH = el("g", {}, ts);
+  function drawTS() {
+    tsG.innerHTML = "";
+    const iw = W - Mg.l - Mg.r, gap = 30, h1 = (H - Mg.t - Mg.b - gap) * 0.5, h2 = h1;
+    const y1 = (v) => Mg.t + h1 - v * h1, top2 = Mg.t + h1 + gap, l1max = hist.reduce((a, d) => Math.max(a, d.l1), 2), y2 = (v) => top2 + h2 - (v / l1max) * h2;
+    const t1 = hist.length ? hist[hist.length - 1].t : 0, t0 = Math.max(0, t1 - HL + 1);
+    const xs = (t) => Mg.l + ((t - t0) / Math.max(1, HL - 1)) * iw;
+    // warning bands
+    let b0 = null;
+    hist.forEach((d, k) => {
+      const end = k === hist.length - 1;
+      if (d.q && b0 === null) b0 = d.t;
+      if ((!d.q || end) && b0 !== null) {
+        const tEnd = d.q ? d.t : d.t - 1;
+        for (const [yy, hh] of [[Mg.t, h1], [top2, h2]]) el("rect", { x: xs(b0) - 0.5, y: yy, width: Math.max(1, xs(tEnd) - xs(b0) + 1), height: hh, fill: "#F2D4DC" }, tsG);
+        b0 = null;
+      }
+    });
+    for (const [yy, hh, ticks, lab, sc] of [[Mg.t, h1, [0, 0.5, 1], "species alive", y1], [top2, h2, [0, 1, 2], "λ₁", y2]]) {
+      for (const v of ticks) {
+        if (lab === "λ₁" && v > l1max) continue;
+        el("line", { x1: Mg.l, x2: Mg.l + iw, y1: sc(v), y2: sc(v), stroke: v === 0 ? RULE : RULE2 }, tsG);
+        el("text", { x: Mg.l - 6, y: sc(v) + 4, "text-anchor": "end", "font-size": 11, fill: INK3 }, tsG).textContent = v;
+      }
+      el("text", { x: Mg.l, y: yy - 8, "font-size": 12, fill: INK2 }, tsG).textContent = lab === "species alive" ? "Fraction of species alive" : "Perron–Frobenius eigenvalue λ₁";
+    }
+    hist.forEach((d) => { if (d.c) el("line", { x1: xs(d.t), x2: xs(d.t), y1: Mg.t, y2: top2 + h2, stroke: INK, "stroke-width": 1.5 }, tsG); });
+    for (const [f, sc, color] of [["rho", y1, INK], ["l1", y2, RED]]) {
+      let dd = ""; hist.forEach((d, k) => { dd += (k ? "L" : "M") + xs(d.t).toFixed(1) + "," + sc(d[f]).toFixed(1); });
+      if (dd) el("path", { d: dd, fill: "none", stroke: color, "stroke-width": 1.8, "stroke-linejoin": "round" }, tsG);
+    }
+    const tick = (t) => { el("text", { x: xs(t), y: H - 22, "text-anchor": "middle", "font-size": 11, fill: INK3 }, tsG).textContent = t; };
+    const step = HL >= 800 ? 200 : 100; for (let t = Math.ceil(t0 / step) * step; t <= t0 + HL; t += step) if (t <= t1 + step) tick(t);
+    el("text", { x: Mg.l + iw / 2, y: H - 4, "text-anchor": "middle", "font-size": 12, fill: INK3 }, tsG).textContent = "step";
+  }
+  const hs = $("#jkh"), hG = el("g", {}, hs);
+  function drawHist() {
+    hG.innerHTML = "";
+    const iw = W - Mg.l - Mg.r, ih = H - Mg.t - Mg.b, x = jk.x, core = jk.core, base = Mg.t + ih;
+    let xmax = 0; for (let i = 0; i < N; i++) xmax = Math.max(xmax, x[i]);
+    let xmin = Infinity; for (let i = 0; i < N; i++) if (jk.alive[i]) xmin = Math.min(xmin, x[i]);
+    const sp = []; for (let i = 0; i < N; i++) if (jk.alive[i]) sp.push({ r: x[i] / xmin, c: core[i] });
+    let vmax = 1, gap = 0;
+    for (const d of sp) { vmax = Math.max(vmax, d.r); gap = Math.max(gap, Math.abs(d.r - Math.round(d.r))); }
+    const CAP = 1e4, hi = Math.min(CAP, Math.max(10, vmax * 1.3)), lo = 0.8, L = Math.log10(hi / lo);
+    const xs = (v) => Mg.l + (Math.log10(v / lo) / L) * iw;
+    // whole-number gridlines, drawn only while they stay a few pixels apart
+    let lastLab = -1e9, prev = -1e9;
+    for (let k = 1; k <= hi; k++) {
+      const px = xs(k);
+      if (px - prev < 4) { const p10 = Math.pow(10, Math.floor(Math.log10(k))); if (k % p10) continue; }
+      prev = px;
+      const major = Math.pow(10, Math.floor(Math.log10(k))) === k;
+      el("line", { x1: px, x2: px, y1: Mg.t, y2: base, stroke: major ? RULE : RULE2 }, hG);
+      const nice = [1, 2, 3, 4, 5, 7].includes(k / Math.pow(10, Math.floor(Math.log10(k))));
+      if (nice && px - lastLab >= 24) { el("text", { x: px, y: base + 16, "text-anchor": "middle", "font-size": 11, fill: INK3 }, hG).textContent = k >= 1000 ? k / 1000 + "k" : k; lastLab = px; }
+    }
+    el("line", { x1: Mg.l, x2: Mg.l + iw, y1: base, y2: base, stroke: RULE }, hG);
+    // stack the dots by pixel column
+    sp.sort((a, b) => a.r - b.r);
+    const cols = new Map(); let off = 0;
+    for (const d of sp) { if (d.r > hi) { off++; continue; } const k = Math.round(xs(d.r) / 8); if (!cols.has(k)) cols.set(k, []); cols.get(k).push(d); }
+    let maxStack = 1; cols.forEach((c) => { maxStack = Math.max(maxStack, c.length); });
+    const pitch = Math.min(10, (ih - 6) / maxStack), rad = Math.max(2, Math.min(4.2, pitch / 2 - 0.4));
+    cols.forEach((c) => {
+      c.sort((a, b) => b.c - a.c);
+      c.forEach((d, k) => el("circle", { cx: xs(d.r), cy: base - pitch / 2 - k * pitch - 1, r: rad, fill: d.c ? RED : BLUE, stroke: "#fff", "stroke-width": 1 }, hG));
+    });
+    el("text", { x: Mg.l + iw / 2, y: H - 4, "text-anchor": "middle", "font-size": 12, fill: INK3 }, hG).textContent = "abundance ÷ smallest abundance (log scale)";
+    const msg = !sp.length ? "" : jk.lambda1 === 0 ? "No cycle left: nothing sustains these species"
+      : jk.quantized ? "Quantized: every ratio is a whole number"
+      : vmax > 1e5 ? "Not quantized: abundances span more than five decades"
+      : `Not quantized: ratios miss whole numbers by up to ${gap < 0.005 ? gap.toExponential(0) : gap.toFixed(2)}`;
+    el("text", { x: Mg.l, y: Mg.t - 8, "font-size": 12, fill: jk.quantized ? RED : INK2, "font-weight": jk.quantized ? 600 : 400 }, hG).textContent = msg;
+    if (off) el("text", { x: Mg.l + iw, y: Mg.t + 12, "text-anchor": "end", "font-size": 11, fill: INK3 }, hG).textContent = `${off} more beyond ${hi >= 1000 ? hi / 1000 + "k" : Math.round(hi)}`;
+  }
+  function sizePlots() {
+    const w = Math.round($("#jkts-wrap").getBoundingClientRect().width) || 400;
+    if (Math.abs(w - W) < 2) return;
+    W = Math.max(300, w); ts.setAttribute("viewBox", `0 0 ${W} ${H}`); hs.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    drawTS(); drawHist();
+  }
+
+  /* ---------- controls ---------- */
+  let speed = 1, running = !reduceMotion, visible = true, acc = 0, last = 0, skipping = false, pausedAtWarning = false;
+  const BASE = 6;  // steps per second at 1x
+  $("#jkm").addEventListener("input", (e) => { m = +e.target.value; jk.m = m; $("#jkm-o").textContent = m.toFixed(2); if (jk.events.length) mixedM = true; readout(); });
+  $$("[data-jkn]").forEach((b) => b.addEventListener("click", () => {
+    N = +b.dataset.jkn; $$("[data-jkn]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+    build(); warmStart(); for (let k = 0; k < 80; k++) layout(1); refresh();
+  }));
+  $$("[data-jkspeed]").forEach((b) => b.addEventListener("click", () => {
+    speed = +b.dataset.jkspeed; $$("[data-jkspeed]").forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+  }));
+  const playBtn = $("#jkplay");
+  const syncPlay = () => { playBtn.textContent = running ? "Pause" : "Play"; playBtn.setAttribute("aria-pressed", String(!running)); };
+  playBtn.addEventListener("click", () => { running = !running; pausedAtWarning = false; syncPlay(); readout(); });
+  $("#jkreset").addEventListener("click", () => { build(); warmStart(); for (let k = 0; k < 80; k++) layout(1); refresh(); });
+  const skipBtn = $("#jkskip");
+  skipBtn.addEventListener("click", () => {
+    if (skipping) return;
+    skipping = true; skipBtn.textContent = "Searching…"; skipBtn.disabled = true;
+    let n = 0, found = false;
+    (function chunk() {
+      const t0 = performance.now();
+      while (performance.now() - t0 < 30 && !found && n < 30000) {
+        const prevQ = jk.critical; doStep(); n++;
+        if (!prevQ && jk.critical) found = true;
+      }
+      layout(4); refresh();
+      if (found || n >= 30000) {
+        skipping = false; skipBtn.textContent = "Skip to the next warning"; skipBtn.disabled = false;
+        speed = 1; $$("[data-jkspeed]").forEach((x) => x.setAttribute("aria-pressed", String(x.dataset.jkspeed === "1")));
+        running = false; pausedAtWarning = found; syncPlay();
+        for (let k = 0; k < 60; k++) layout(1);
+        refresh();
+        return;
+      }
+      requestAnimationFrame(chunk);
+    })();
+  });
+
+  function refresh() { readout(); drawTS(); drawHist(); draw(); }
+
+  /* ---------- loop ---------- */
+  new ResizeObserver(resize).observe(cv);
+  new ResizeObserver(sizePlots).observe($("#jkts-wrap"));
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; }, { rootMargin: "100px" }).observe(cv);
+  let plotTimer = 0;
+  function frame(ts_) {
+    requestAnimationFrame(frame);
+    const dt = last ? Math.min(0.1, (ts_ - last) / 1000) : 1 / 60; last = ts_;
+    if (visible && !skipping) {
+      if (running) {
+        acc += BASE * speed * dt;
+        let n = Math.floor(acc); acc -= n; n = Math.min(n, 60);
+        for (let k = 0; k < n; k++) doStep();
+        removedAge += speed > 1 ? 0.5 : 0.12 * 60 * dt;
+        if (flash > 0) flash -= dt * 0.8;
+      }
+      layout(2); draw();
+      plotTimer += dt;
+      if (plotTimer > (speed > 1 ? 0.25 : 0.15)) { plotTimer = 0; readout(); drawTS(); drawHist(); }
+    }
+  }
+  function warmStart() { let n = 0; while (jk.nCoreComps === 0 && n < 5000) { doStep(); n++; } removedAge = 99; }
+  build(); warmStart();
+  for (let k = 0; k < 150; k++) layout(1);
+  $("#jkm-o").textContent = m.toFixed(2); syncPlay(); refresh(); resize();
   requestAnimationFrame(frame);
 })();
 
